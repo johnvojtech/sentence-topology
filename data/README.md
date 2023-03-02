@@ -62,7 +62,7 @@ Example:
 
 The same example in nicer-to-look-at table:
 
-| sentence id | seed sentence id | transformation type | sentence | more general ids | less general ids | too similar ids | too dissimilar ids |
+| sentence id | seed sentence id | transformation type | sentence | more "transformed" ids | less "transformed" ids | too similar ids | too dissimilar ids |
 | - | - | - | - | - | - | - | - |
 | 80 | 10 | formal sentence | Čtyři mí příbuzní zesnuli. | 83 | 79,82 | 78 |
 
