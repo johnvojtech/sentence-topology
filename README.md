@@ -9,3 +9,13 @@ the project:
 ```bash
 pip install -e .
 ```
+
+## Scripts
+
+- `sent-transfomer-embedding` - gets embeddings using `sentence-transformers`
+  package
+
+```bash
+sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings.tsv
+```
+

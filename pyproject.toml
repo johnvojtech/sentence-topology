@@ -18,6 +18,9 @@ dburian_notebooks = [
   "ipython",
 ]
 
+[project.scripts]
+sent-transformer-embedding = "sentence_topology.scripts.sent_transformer_embedding:main"
+
 [project.urls]
 homepage = "https://github.com/johnvojtech/sentence-topology"
 repository = "https://github.com/johnvojtech/sentence-topology"
