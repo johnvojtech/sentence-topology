@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentence_topology"
+version = "0.0.1"
+authors = [
+  # Add yourself here...
+  {name = "David Burian", email = "david.burian@me.com"},
+]
+dependencies = []
+
+[project.optional-dependencies]
+dburian_notebooks = [
+  "jupyter>=1.0",
+  "jupyter-ascending>=0.1",
+  "ipython",
+]
+
+[project.urls]
+homepage = "https://github.com/johnvojtech/sentence-topology"
+repository = "https://github.com/johnvojtech/sentence-topology"
