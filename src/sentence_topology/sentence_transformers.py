@@ -15,6 +15,6 @@ def get_embeddings(
 
     all_id_embeds = []
     for sent, embed in zip(corpus, all_embeds):
-        all_id_embeds.append(CostraEmbedding(sent.id, sent.seed_id, embed))
+        all_id_embeds.append(CostraEmbedding(sent.id, sent.seed_id, sent.trans, embed))
 
     return all_id_embeds

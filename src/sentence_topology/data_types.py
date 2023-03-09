@@ -15,5 +15,5 @@ CostraSentence = collections.namedtuple(
 )
 
 CostraEmbedding = collections.namedtuple(
-    "CostraEmbedding", ["id", "seed_id", "embedding"]
+    "CostraEmbedding", ["id", "seed_id", "trans", "embedding"]
 )

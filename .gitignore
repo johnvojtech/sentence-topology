@@ -1,3 +1,7 @@
+# David's files
+*.sync.py
+*.sync.ipynb
+# -------------------------PYTHON standard .gitignore ----------------------
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -27,13 +27,14 @@ def save_embeddings(embeddings: list[CostraEmbedding], path: str) -> None:
     """Saves `embeddings` to a .tsv file at `path`."""
 
     def _arr_to_str(array: np.ndarray) -> str:
-        return " ".join(map(str, array))
+        return "\t".join(map(str, array))
 
     with open(path, mode="w", encoding="utf-8") as out_file:
         for sent_embed in embeddings:
             fields = [
                 str(sent_embed.id),
                 str(sent_embed.seed_id),
+                str(sent_embed.trans),
                 _arr_to_str(sent_embed.embedding),
             ]
             print("\t".join(fields), file=out_file)
@@ -49,5 +50,6 @@ def load_embedding(path: str) -> Iterable[CostraEmbedding]:
             yield CostraEmbedding(
                 int(fields[0]),
                 int(fields[1]),
-                np.fromstring(fields[2], dtype=np.float32, sep=" "),
+                fields[2],
+                np.array([float(dim) for dim in fields[3:]], dtype=np.float32),
             )
