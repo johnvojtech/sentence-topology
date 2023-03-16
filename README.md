@@ -33,3 +33,5 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings.tsv
 - [ ] maybe try different doc2vec hyperparameters
   - different architectures
   - smaller vector size? reasonable 100
+- [ ] Ondrej: "Maybe by using only unsupervised embedding we are asking too much. Maybe we should generate the embeddings in a supervised fashion."
+  - Using Jacked-Knife approach -- using 9/10 of the data to train, generate the embeddings for the 1/9 of the data
