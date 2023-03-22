@@ -18,3 +18,13 @@ def get_embeddings(
         all_id_embeds.append(CostraEmbedding(sent.id, sent.seed_id, sent.trans, embed))
 
     return all_id_embeds
+
+
+def get_supervised_embeddings(
+    train: list[CostraSentence],
+    test: list[CostraSentence],
+    sentence_model: str,
+    *,
+    verbose: bool = False,
+) -> list[CostraEmbedding]:
+    model = SentenceTransformer(sentence_model)

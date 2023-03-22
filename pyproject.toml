@@ -10,7 +10,13 @@ authors = [
   {name = "David Burian", email = "david.burian@me.com"},
 ]
 dependencies = [
-  "sentence-transformers"
+  "sentence-transformers",
+  "pandas",
+  "numpy",
+  "sklearn",
+  "torch",
+  "matplotlib",
+  "tensorboard",
 ]
 
 
