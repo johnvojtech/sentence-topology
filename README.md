@@ -59,3 +59,4 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings.tsv
   - [x] Softmax loss
   - [ ] Contrastive loss
   - Confusion matrix **David**
+- [ ] Ondrej: Is future-past relationship only a conincidence? Try also exchanging words, maybe PCA will find relationship as well...
