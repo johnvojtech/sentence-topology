@@ -60,3 +60,5 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings.tsv
   - [ ] Contrastive loss
   - Confusion matrix **David**
 - [ ] Ondrej: Is future-past relationship only a conincidence? Try also exchanging words, maybe PCA will find relationship as well...
+- [ ] Run correlation between transformation ranking of the degree of the transformation and different distance metrics in the original embedding space.
+- [ ] Check if a generalization transformation has swpaed "more" and "less" transformed.
