@@ -1,6 +1,10 @@
 # sentence-topology
 Sentence embeddings topology analysis: a project for NPFL087 Statistical Machine Translation at MFF UK.
 
+## Links
+
+- [Notes in google docs](https://docs.google.com/document/d/1ywUvIOaBFazc-MaJnkXkC-_ILy4b_VzXz9301Ms0_Xw/edit)
+
 ## Installation
 
 Just run the following command (using your virtual environment) in the root of
