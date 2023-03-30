@@ -1,5 +1,7 @@
 # sentence-topology
-Sentence embeddings topology analysis: a project for NPFL087 Statistical Machine Translation at MFF UK.
+
+Sentence embeddings topology analysis: a project for NPFL087 Statistical Machine
+Translation at MFF UK.
 
 ## Installation
 
@@ -16,7 +18,11 @@ pip install -e .
   package
 
 ```bash
-sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings.tsv
+# For unsupervised embeddings
+sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}.tsv
+
+# For supervised embeddings
+sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split_ind}.tsv --train_objective "transformation-prediction"
 ```
 
 ## Ideas

@@ -1,7 +1,7 @@
 import math
 import os
 from dataclasses import dataclass
-from typing import Optional, cast
+from typing import Iterable, Optional, cast
 
 import numpy as np
 import torch
@@ -35,21 +35,14 @@ class TBLabelAccuracyEvaluator(SentenceEvaluator):
     def __call__(
         self, model, output_path: str = None, epoch: int = -1, steps: int = -1
     ) -> float:
-        model.eval()
         total = 0
         correct = 0
 
-        self.dataloader.collate_fn = model.smart_batching_collate
-        for _, batch in enumerate(self.dataloader):
-            features, label_ids = batch
-            for idx in range(len(features)):
-                features[idx] = batch_to_device(features[idx], model.device)
-            label_ids = label_ids.to(model.device)
-            with torch.no_grad():
-                _, prediction = self._softmax_model(features, labels=None)
-
+        for prediction, label_ids in predict_with_classifier(
+            self.dataloader, self._softmax_model, model
+        ):
             total += prediction.size(0)
-            correct += torch.argmax(prediction, dim=1).eq(label_ids).sum().item()
+            correct += prediction.eq(label_ids).sum().item()
         accuracy = correct / total
 
         name = self._name
@@ -62,6 +55,26 @@ class TBLabelAccuracyEvaluator(SentenceEvaluator):
         self._writer.add_scalar(name, accuracy, epoch * self._steps_per_epoch + steps)
 
         return accuracy
+
+
+def predict_with_classifier(
+    dataloader: DataLoader,
+    classifier: torch.nn.Module,
+    model: SentenceTransformer,
+) -> Iterable[tuple[torch.Tensor, torch.Tensor]]:
+    """Predicts transformation using a sentence_transformers softmax classifier."""
+    model.eval()
+
+    dataloader.collate_fn = model.smart_batching_collate
+    for _, batch in enumerate(dataloader):
+        features, label_ids = batch
+        for idx in range(len(features)):
+            features[idx] = batch_to_device(features[idx], model.device)
+        label_ids = label_ids.to(model.device)
+        with torch.no_grad():
+            _, prediction = classifier(features, labels=None)
+
+        yield torch.argmax(prediction, dim=1), label_ids
 
 
 @dataclass
@@ -115,7 +128,8 @@ def train_with_transformation_prediction(
     num_labels: int,
     epochs: int,
     log_dir: Optional[str] = None,
-) -> None:
+    verbose: bool = False,
+) -> torch.nn.Module:
     train_loss = losses.SoftmaxLoss(
         model,
         sentence_embedding_dimension=cast(
@@ -148,4 +162,7 @@ def train_with_transformation_prediction(
         epochs=epochs,
         evaluator=evaluator,
         evaluation_steps=math.floor(epoch_steps / 2),
+        show_progress_bar=verbose,
     )
+
+    return train_loss

@@ -43,10 +43,12 @@ def get_embeddings_trans_prediction(
     for split_ind, (train_inds, test_inds) in enumerate(
         kfold.split(data.sent_pairs, y=data.trans, groups=data.seed_ids)
     ):
-        train = [data.sent_pairs[i] for i in train_inds]
-        train = DataLoader(train, batch_size=8, shuffle=True)
-        test = [data.sent_pairs[i] for i in test_inds]
-        test = DataLoader(test, batch_size=8)
+        train = DataLoader(
+            [data.sent_pairs[i] for i in train_inds],
+            batch_size=8,
+            shuffle=True,
+        )
+        test = DataLoader([data.sent_pairs[i] for i in test_inds], batch_size=8)
 
         model = SentenceTransformer(sentence_model)
 
@@ -61,14 +63,16 @@ def get_embeddings_trans_prediction(
             epochs=epochs,
             num_labels=len(data.label_encoder.classes_),
             log_dir=split_log_dir,
+            verbose=verbose,
         )
 
         test_sents = [data.sents[i] for i in test_inds]
-        test_texts = [sent.text for sent in test_sents]
-        test_embeds = model.encode(test_texts, show_progress_bar=verbose)
+        test_embeds = model.encode(
+            [sent.text for sent in test_sents],
+            show_progress_bar=verbose,
+        )
 
-        embeds = []
-        for sent, embed in zip(test_sents, test_embeds):
-            embeds.append(CostraEmbedding(sent.id, sent.seed_id, sent.trans, embed))
-
-        yield embeds
+        yield [
+            CostraEmbedding(sent.id, sent.seed_id, sent.trans, embed)
+            for sent, embed in zip(test_sents, test_embeds)
+        ]

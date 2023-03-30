@@ -1,7 +1,7 @@
 import argparse
+import enum
 import logging
 import sys
-from enum import StrEnum
 
 from sentence_topology.sentence_transformers.embeddings import (
     get_embeddings, get_embeddings_trans_prediction)
@@ -9,7 +9,7 @@ from sentence_topology.sentence_transformers.embeddings import (
 from .. import utils
 
 
-class TrainObjectives(StrEnum):
+class TrainObjectives(enum.Enum):
     TransformationPrediction = "transformation-prediction"
 
 
@@ -26,7 +26,13 @@ def parse_args() -> argparse.Namespace:
         "-o",
         "--output",
         type=str,
-        help="Path where to output embeddings in a tsv format.",
+        help=(
+            "Path where to output embeddings in a tsv format. Given path can have named"
+            " placeholders. Available placeholders are:\n\t-'model' - model"
+            " name\n\t-'split_ind' - underscore and split index for supervised"
+            " embeddings."
+        ),
+        default="./embeddings/{model}{split_ind}.tsv",
     )
     parser.add_argument(
         "--train_objective",
@@ -63,8 +69,9 @@ def main() -> None:
     if args.train_objective is None:
         all_embeds = get_embeddings(corpus, args.model, verbose=True)
 
-        logging.info("Saving embeddings into %s.", args.output)
-        utils.save_embeddings(all_embeds, args.output)
+        output_file = args.output.format(model=args.model, split_ind="")
+        logging.info("Saving embeddings into %s.", output_file)
+        utils.save_embeddings(all_embeds, output_file)
         sys.exit(0)
 
     if args.train_objective == TrainObjectives.TransformationPrediction:
@@ -76,11 +83,11 @@ def main() -> None:
             epochs=4,
         )
         for split_ind, embeds in enumerate(embeddings_by_split):
-            print(len(embeds))
-            utils.save_embeddings(
-                embeds,
-                f"../embeddings/paraphrase-multilingual-MiniLM-L12-v2_supervised_{split_ind}.tsv",
+            output_file = args.output.format(
+                model=args.model, split_ind=f"_{split_ind}"
             )
+            logging.info("Saving embeddings into %s.", output_file)
+            utils.save_embeddings(embeds, output_file)
 
 
 if __name__ == "__main__":
