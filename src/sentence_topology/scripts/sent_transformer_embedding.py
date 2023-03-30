@@ -1,8 +1,16 @@
 import argparse
 import logging
+import sys
+from enum import StrEnum
+
+from sentence_topology.sentence_transformers.embeddings import (
+    get_embeddings, get_embeddings_trans_prediction)
 
 from .. import utils
-from .. import sentence_transformers
+
+
+class TrainObjectives(StrEnum):
+    TransformationPrediction = "transformation-prediction"
 
 
 def parse_args() -> argparse.Namespace:
@@ -19,6 +27,21 @@ def parse_args() -> argparse.Namespace:
         "--output",
         type=str,
         help="Path where to output embeddings in a tsv format.",
+    )
+    parser.add_argument(
+        "--train_objective",
+        type=str,
+        default=None,
+        help=(
+            "Objective to pretrain on. Available objectives:"
+            f" {','.join([o.value for o in TrainObjectives])}"
+        ),
+    )
+    parser.add_argument(
+        "--logdir",
+        type=str,
+        default=None,
+        help="Directory where to output tensorboard logs for supervised embeddings.",
     )
 
     args = parser.parse_args()
@@ -37,10 +60,27 @@ def main() -> None:
     corpus = utils.load_corpus(args.input)
     corpus = list(corpus)
 
-    all_embeds = sentence_transformers.get_embeddings(corpus, args.model, verbose=True)
+    if args.train_objective is None:
+        all_embeds = get_embeddings(corpus, args.model, verbose=True)
 
-    logging.info("Saving embeddings into %s.", args.output)
-    utils.save_embeddings(all_embeds, args.output)
+        logging.info("Saving embeddings into %s.", args.output)
+        utils.save_embeddings(all_embeds, args.output)
+        sys.exit(0)
+
+    if args.train_objective == TrainObjectives.TransformationPrediction:
+        embeddings_by_split = get_embeddings_trans_prediction(
+            corpus,
+            args.model,
+            verbose=True,
+            log_dir=args.logdir,
+            epochs=4,
+        )
+        for split_ind, embeds in enumerate(embeddings_by_split):
+            print(len(embeds))
+            utils.save_embeddings(
+                embeds,
+                f"../embeddings/paraphrase-multilingual-MiniLM-L12-v2_supervised_{split_ind}.tsv",
+            )
 
 
 if __name__ == "__main__":
