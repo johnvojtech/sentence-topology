@@ -12,7 +12,7 @@ def confusion_matrix(
     axes.set_ylabel("True")
     axes.set_xlabel("Predicted")
 
-    matrix_norm = conf_matrix.astype("float") / conf_matrix.sum(axis=1)
+    matrix_norm = conf_matrix.div(conf_matrix.sum(axis=1), axis=0)
     matrix_norm *= 100
     sns.heatmap(
         matrix_norm if norm else conf_matrix,
