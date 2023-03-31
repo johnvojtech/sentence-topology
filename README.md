@@ -3,6 +3,10 @@
 Sentence embeddings topology analysis: a project for NPFL087 Statistical Machine
 Translation at MFF UK.
 
+## Links
+
+- [Notes in google docs](https://docs.google.com/document/d/1ywUvIOaBFazc-MaJnkXkC-_ILy4b_VzXz9301Ms0_Xw/edit)
+
 ## Installation
 
 Just run the following command (using your virtual environment) in the root of
@@ -68,3 +72,8 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split
   - [ ] Contrastive loss
   - [x] Confusion matrix **David**
 - [ ] Ondrej: Is future-past relationship only a conincidence? Try also exchanging words, maybe PCA will find relationship as well...
+- [ ] Run correlation between transformation ranking of the degree of the transformation and different distance metrics in the original embedding space.
+- [ ] Check if a generalization transformation has swpaed "more" and "less" transformed.
+- [ ] Define what would be the idea result -- document in google doc
+  - Good clustering of transformed embeddings - seed embeddings
+  - High accuracy of classifiers predicting transformation from embeddings
