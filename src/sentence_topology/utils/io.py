@@ -1,4 +1,6 @@
+import os
 from typing import Any, Iterable
+
 import numpy as np
 
 from ..data_types import CostraEmbedding, CostraSentence
@@ -53,3 +55,11 @@ def load_embedding(path: str) -> Iterable[CostraEmbedding]:
                 fields[2],
                 np.array([float(dim) for dim in fields[3:]], dtype=np.float32),
             )
+
+
+def load_all_embeddings(
+    dir_path: str,
+) -> Iterable[tuple[os.DirEntry, Iterable[CostraEmbedding]]]:
+    for entry in os.scandir(dir_path):
+        if entry.name.endswith(".tsv") and entry.is_file():
+            yield entry, load_embedding(entry.path)
