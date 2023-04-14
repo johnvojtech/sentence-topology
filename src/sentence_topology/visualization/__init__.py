@@ -1,1 +1,1 @@
-from .predictions import confusion_matrix
+from .predictions import draw_confusion_matrix
