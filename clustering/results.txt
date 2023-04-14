@@ -1,0 +1,165 @@
+'The  Calinski-Harabasz Index (CHI)'
+Also the Variance Ratio Criterion, (total between-clusters dispersion)/(total
+inter-cluster dispersion)
+tl;dr: A magic sklearn metrics that gives nice results. Worst CHI = 0, the higher the better.
+
+'Embeddings - overall Calinski-Harabasz Index (CHI)'
+doc2vec-cs-vecsize-512-train-1M-sents.tsv       5.052114208722813
+doc2vec_vsize_10.tsv    7.421865564592294
+doc2vec_vsize_100.tsv   4.293348539081072
+doc2vec_vsize_2.tsv     3.4811625501914882
+doc2vec_vsize_256.tsv   4.1413825488679334
+doc2vec_vsize_3.tsv     4.78832032045534
+mixup_all_doc2vec-cs-vecsize-512-train-1M-sents.tsv     0.9499875369874418
+mixup_all_doc2vec_vsize_10.tsv  0.8204263618016133
+mixup_all_doc2vec_vsize_100.tsv 1.0845301589839664
+mixup_all_doc2vec_vsize_2.tsv   0.7855050999771913
+mixup_all_doc2vec_vsize_256.tsv 0.9666626448559523
+mixup_all_doc2vec_vsize_3.tsv   1.1137504805351737
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2.tsv     0.9693170078838476
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_0.tsv        1.085765662478381
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_1.tsv        1.000572364206333
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_2.tsv        0.892384195239493
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_3.tsv        1.3526321638396022
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_4.tsv        1.182075397563549
+mixup_by_seed_doc2vec-cs-vecsize-512-train-1M-sents.tsv 0.7659349679318804
+mixup_by_seed_doc2vec_vsize_10.tsv      0.8472531307233127
+mixup_by_seed_doc2vec_vsize_100.tsv     0.7002697662821733
+mixup_by_seed_doc2vec_vsize_2.tsv       0.8585427912366135
+mixup_by_seed_doc2vec_vsize_256.tsv     0.7699142523319119
+mixup_by_seed_doc2vec_vsize_3.tsv       0.9703560508597756
+mixup_by_seed_paraphrase-multilingual-MiniLM-L12-v2.tsv 0.4147939710412952
+paraphrase-multilingual-MiniLM-L12-v2.tsv       8.816929789161826
+paraphrase-multilingual-MiniLM-L12-v2_supervised_0.tsv  33.6009368350474
+paraphrase-multilingual-MiniLM-L12-v2_supervised_1.tsv  38.677473365427346
+paraphrase-multilingual-MiniLM-L12-v2_supervised_2.tsv  39.06253848411488
+paraphrase-multilingual-MiniLM-L12-v2_supervised_3.tsv  38.83451394948084
+paraphrase-multilingual-MiniLM-L12-v2_supervised_4.tsv  26.106415950578974
+
+'The Davies-Bouldin Index (DBI)'
+This index signifies the average ‘similarity’ between clusters, i.e. distance
+between clusters compared to size of the clusters; the smaller the better.
+'Embeddings - overall DBI'
+doc2vec-cs-vecsize-512-train-1M-sents.tsv       23.03572905114882
+doc2vec_vsize_10.tsv    30.864731200662654
+doc2vec_vsize_100.tsv   24.422010354314807
+doc2vec_vsize_2.tsv     1579.6644069300603
+doc2vec_vsize_256.tsv   24.654647221020753
+doc2vec_vsize_3.tsv     45.87609624514238
+mixup_all_doc2vec-cs-vecsize-512-train-1M-sents.tsv     34.84738836365077
+mixup_all_doc2vec_vsize_10.tsv  65.60016922730274
+mixup_all_doc2vec_vsize_100.tsv 35.940155431198576
+mixup_all_doc2vec_vsize_2.tsv   3636.9570403550015
+mixup_all_doc2vec_vsize_256.tsv 35.51089425292161
+mixup_all_doc2vec_vsize_3.tsv   113.10352103915407
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2.tsv     36.46363449947456
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_0.tsv        19.747969230342978
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_1.tsv        21.48046429981753
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_2.tsv        22.676520858813955
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_3.tsv        20.102307201840983
+mixup_all_paraphrase-multilingual-MiniLM-L12-v2_supervised_4.tsv        18.817223819203043
+mixup_by_seed_doc2vec-cs-vecsize-512-train-1M-sents.tsv 39.55109523417918
+mixup_by_seed_doc2vec_vsize_10.tsv      52.10312281229893
+mixup_by_seed_doc2vec_vsize_100.tsv     43.001149973281656
+mixup_by_seed_doc2vec_vsize_2.tsv       2793.789030792201
+mixup_by_seed_doc2vec_vsize_256.tsv     39.82792657184656
+mixup_by_seed_doc2vec_vsize_3.tsv       208.2528336627211
+mixup_by_seed_paraphrase-multilingual-MiniLM-L12-v2.tsv 58.31945245347051
+paraphrase-multilingual-MiniLM-L12-v2.tsv       27.831679755600323
+paraphrase-multilingual-MiniLM-L12-v2_supervised_0.tsv  11.869790036020026
+paraphrase-multilingual-MiniLM-L12-v2_supervised_1.tsv  12.6959805460158
+paraphrase-multilingual-MiniLM-L12-v2_supervised_2.tsv  12.178452763355045
+paraphrase-multilingual-MiniLM-L12-v2_supervised_3.tsv  13.447297049109553
+paraphrase-multilingual-MiniLM-L12-v2_supervised_4.tsv  10.956818980314466
+'CHI by transformation pairs on supervised_2'
+minimal change x seed : 0.10956476966722715
+nonsense x seed : 0.18907038933213272
+paraphrase x seed : 0.19052400308788148
+different meaning x seed : 0.3012461751640525
+minimal change x nonsense : 0.35828189287204393
+different meaning x minimal change : 0.39849738551751945
+different meaning x paraphrase : 0.40382142708292523
+formal sentence x seed : 0.4874589757875954
+different meaning x nonsense : 0.5239219442496922
+seed x simple sentence : 0.5302772955856309
+minimal change x paraphrase : 0.5757435266051609
+formal sentence x paraphrase : 0.587399732381976
+nonsense x paraphrase : 0.6128862169026333
+minimal change x simple sentence : 0.6620738485320712
+different meaning x simple sentence : 0.8267302588555692
+different meaning x formal sentence : 0.9103079282702632
+formal sentence x nonsense : 0.9606771984206982
+nonstandard sentence x seed : 0.9991686252510036
+nonsense x simple sentence : 1.3135876958631267
+formal sentence x minimal change : 1.3558578143221471
+paraphrase x simple sentence : 1.4706756800964407
+different meaning x nonstandard sentence : 2.471627628191108
+nonstandard sentence x paraphrase : 2.6694607255638223
+nonsense x nonstandard sentence : 2.670528962251365
+minimal change x nonstandard sentence : 2.754636899633395
+formal sentence x nonstandard sentence : 3.0259517184546842
+formal sentence x simple sentence : 3.0351495876781804
+generalization x seed : 3.768794118901084
+generalization x simple sentence : 3.916700482258987
+nonstandard sentence x simple sentence : 4.3118196358632055
+opposite meaning x seed : 4.416636310882466
+generalization x minimal change : 5.506300353780776
+opposite meaning x simple sentence : 6.22208714545815
+different meaning x generalization : 6.454205050159402
+generalization x nonsense : 6.916271452849966
+different meaning x opposite meaning : 8.56088338197387
+minimal change x opposite meaning : 9.14873122660212
+nonsense x opposite meaning : 10.126734951944277
+generalization x paraphrase : 13.107037477507104
+opposite meaning x paraphrase : 14.270694051666347
+possibility x seed : 14.948339808436906
+past x seed : 17.636799263976634
+nonstandard sentence x opposite meaning : 18.657682107923325
+possibility x simple sentence : 18.7952006537381
+formal sentence x opposite meaning : 19.947099799263906
+formal sentence x generalization : 19.963381318381984
+minimal change x possibility : 21.918084455089158
+different meaning x possibility : 23.00392878934662
+different meaning x past : 23.75270544066055
+nonsense x possibility : 24.466118274920817
+paraphrase x possibility : 27.131202785814622
+past x simple sentence : 27.547114366279292
+generalization x possibility : 28.78437889659689
+minimal change x past : 29.19707889309967
+generalization x opposite meaning : 31.865668228302148
+generalization x nonstandard sentence : 31.879402400638217
+nonsense x past : 32.87146705553983
+opposite meaning x possibility : 33.82415116715914
+formal sentence x possibility : 34.199390105855926
+paraphrase x past : 36.67983368091683
+nonstandard sentence x possibility : 40.26089680305894
+formal sentence x past : 41.013645781132695
+future x seed : 41.25445698086363
+nonstandard sentence x past : 43.53950005214964
+future x possibility : 45.5925537832941
+opposite meaning x past : 55.117937985974955
+future x simple sentence : 55.690744497764136
+future x minimal change : 68.05322767873706
+different meaning x future : 70.52920339471372
+generalization x past : 77.17431332336824
+future x nonsense : 78.53856722561483
+ban x opposite meaning : 82.133776254556
+future x generalization : 89.62808919561736
+past x possibility : 94.61301274575965
+future x opposite meaning : 102.87226862492594
+future x paraphrase : 105.0556143888438
+ban x simple sentence : 105.30834720295464
+ban x seed : 111.98489027299453
+ban x different meaning : 122.96850975483959
+ban x minimal change : 132.87588699876275
+ban x paraphrase : 138.01687766010488
+formal sentence x future : 138.43696526567047
+ban x nonsense : 143.3538024398797
+ban x generalization : 150.79297466081022
+ban x nonstandard sentence : 155.58660248420927
+ban x formal sentence : 157.26187236475494
+future x nonstandard sentence : 160.13214576091744
+ban x possibility : 195.6717621989218
+ban x past : 223.44162900380297
+ban x future : 239.41888421189907
+future x past : 241.57835401861666

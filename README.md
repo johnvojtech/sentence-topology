@@ -39,13 +39,13 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split
 
 ### Prioritized
 
-- [ ] visualize transformations for given seed **Leixin**
+- [x] visualize transformations for given seed **Leixin**
 - [ ] training a simple classifier on the embeddings **David**
   - [ ] predicting transformation
   - [ ] predicting similar ids, dissimilar ids
   - [ ] using decision trees (or other explainable models) to explain why the embeddings are classified as such
   - [ ] Confussion matrices on all embedding **David**
-- [ ] generate random embeddings **Vojtěch**
+- [x] generate random embeddings **Vojtěch**
 - [ ] visualize the amount transformation using the more transformed and less transformed columns
 
 
