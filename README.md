@@ -31,28 +31,59 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split
 
 ## Timeline
 
-- Middle April: decide next direction based on the visualizations, classifications, clustering
-- End of May: Starting to wrap up
-- End of june: Finished for the purpose of MT subject
+- April: decide next direction based on the visualizations, classifications, clustering
+- End of April: Starting to wrap up
+- Middle of May: Finished for the purpose of MT subject
+
+## Paper chapters
+
+- Title ideas:
+  - Embedding Costra corpus: What information is there?
+  - Seeking information in text embeddings
+
+- Introduction
+- Background
+  - COSTRA corpus
+  - Models used
+- Methodology
+  1. is the information in there?
+  2. 
+  
+  10. is the information encoded in the topology?
+  
+- Results
+
+- Conclusion
+
+## Dones
+
+- [x] generate random embeddings **Vojtěch**
+- [x] visualize transformations for given seed **Leixin**
+- [x] training a simple classifier on the embeddings **David**
+  - [x] predicting transformation
+  - [x] using decision trees (or other explainable models) to explain why the embeddings are classified as such
+  - [x] Confussion matrices on all embedding **David**
+  
 
 ## Ideas
 
 ### Prioritized
 
-- [x] visualize transformations for given seed **Leixin**
-- [x] training a simple classifier on the embeddings **David**
-  - [x] predicting transformation
-  - [ ] predicting similar ids, dissimilar ids
-  - [x] using decision trees (or other explainable models) to explain why the embeddings are classified as such
-  - [x] Confussion matrices on all embedding **David**
-- [x] generate random embeddings **Vojtěch**
+- [ ] training a simple classifier on the embeddings **David**
+  - [ ] subtracting seed before classifying
+  - [ ] TF-IDF embeddings
+- [ ] Hierarchical clustering - dendogram ? Maybe
+  - [ ] data **Vojtěch**
+  - [ ] visualization **Leixin**
 - [ ] visualize the amount transformation using the more transformed and less transformed columns
-
+- [ ] Write background
+- [ ] Methodology steps
+  
 
 ### Backqueue
 
 
-
+- [ ] predicting similar ids, dissimilar ids
 - [ ] have pipelines for evaluating all embeddings
   - clustering
   - visualization
@@ -77,3 +108,4 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split
 - [ ] Define what would be the idea result -- document in google doc
   - Good clustering of transformed embeddings - seed embeddings
   - High accuracy of classifiers predicting transformation from embeddings
+- [ ] Look at the sentences which were classified correctly. Qualitative analysis, look at lexical forms.
