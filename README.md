@@ -35,25 +35,6 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split
 - End of April: Starting to wrap up
 - Middle of May: Finished for the purpose of MT subject
 
-## Paper chapters
-
-- Title ideas:
-  - Embedding Costra corpus: What information is there?
-  - Seeking information in text embeddings
-
-- Introduction
-- Background
-  - COSTRA corpus
-  - Models used
-- Methodology
-  1. is the information in there?
-  2. 
-  
-  10. is the information encoded in the topology?
-  
-- Results
-
-- Conclusion
 
 ## Dones
 
