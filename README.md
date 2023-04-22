@@ -59,7 +59,7 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split
 - [ ] visualize the amount transformation using the more transformed and less transformed columns
 - [ ] Write background
 - [ ] Methodology steps
-  
+- [ ] Add the survey of Classification methods   **Leixin**
 
 ### Backqueue
 
