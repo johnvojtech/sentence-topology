@@ -114,31 +114,3 @@ DEFAULT_GRID_SEARCHED_CLASSIFIERS = [
         },
     ),
 ]
-
-
-def grid_search_classifiers_params_for_all_embeddings(
-    embeddings_dir: str,
-    classifiers: list[GridSearchClassifier] = DEFAULT_GRID_SEARCHED_CLASSIFIERS,
-    *,
-    with_bar: bool = True,
-    paralel: bool = True,
-    scoring: str = "accuracy",
-) -> dict[str, list[EvaluatedGridSearchClassifier]]:
-    evaluated = {}
-    with tqdm(
-        list(load_all_embeddings(embeddings_dir)),
-        desc="Embedding",
-        disable=not with_bar,
-    ) as bar:
-        for entry, embedding in bar:
-            bar.set_postfix(embedding=entry.name)
-            evaluated[entry.name] = grid_search_classifiers_params(
-                list(embedding),
-                classifiers,
-                verbose=0,
-                with_bar=with_bar,
-                scoring=scoring,
-                paralel=paralel,
-            )
-
-    return evaluated
