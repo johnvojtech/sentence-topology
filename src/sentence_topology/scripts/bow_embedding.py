@@ -1,7 +1,11 @@
 import argparse
+<<<<<<< HEAD
 import enum
 import logging
 import sys
+=======
+import logging
+>>>>>>> c880246 (Add bow embeddings and script for generation.)
 
 from sentence_topology.bow import get_embeddings
 
@@ -20,10 +24,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--max_df",
         type=float,
+<<<<<<< HEAD
         help="Tokens with higher than given document frequency will get ignored.",
         default=1.0,
     )
     parser.add_argument(
+=======
+        help="Tokens with higher than given document frequency will be ignored.",
+        default=1.0,
+    )
+    parser.add_argument(
+        "--min_df",
+        type=float,
+        help="Tokens with lower than given document frequncy will be ignored.",
+        default=0.0,
+    )
+    parser.add_argument(
+>>>>>>> c880246 (Add bow embeddings and script for generation.)
         "--tfidf",
         type=bool,
         action=argparse.BooleanOptionalAction,
@@ -39,4 +56,27 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
+<<<<<<< HEAD
 # TODO: Finish this tomorrow because Magdalena wants to go to sleep.
+=======
+def main() -> None:
+    args = parse_args()
+
+    logging.info("Loading corpus from %s.", args.input)
+    corpus = utils.load_corpus(args.input)
+    corpus = list(corpus)
+
+    logging.info("Generating embeddings.")
+    embeddings = get_embeddings(
+        corpus,
+        vectorizer_kwargs={"min_df": args.min_df, "max_df": args.max_df},
+        tfidf=args.tfidf,
+    )
+
+    logging.info("Saving embeddings into %s.", args.output)
+    utils.save_embeddings(embeddings, args.output)
+
+
+if __name__ == "__main__":
+    main()
+>>>>>>> c880246 (Add bow embeddings and script for generation.)
