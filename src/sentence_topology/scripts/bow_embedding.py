@@ -1,11 +1,5 @@
 import argparse
-<<<<<<< HEAD
-import enum
 import logging
-import sys
-=======
-import logging
->>>>>>> c880246 (Add bow embeddings and script for generation.)
 
 from sentence_topology.bow import get_embeddings
 
@@ -24,12 +18,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--max_df",
         type=float,
-<<<<<<< HEAD
-        help="Tokens with higher than given document frequency will get ignored.",
-        default=1.0,
-    )
-    parser.add_argument(
-=======
         help="Tokens with higher than given document frequency will be ignored.",
         default=1.0,
     )
@@ -40,7 +28,6 @@ def parse_args() -> argparse.Namespace:
         default=0.0,
     )
     parser.add_argument(
->>>>>>> c880246 (Add bow embeddings and script for generation.)
         "--tfidf",
         type=bool,
         action=argparse.BooleanOptionalAction,
@@ -56,9 +43,6 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
-<<<<<<< HEAD
-# TODO: Finish this tomorrow because Magdalena wants to go to sleep.
-=======
 def main() -> None:
     args = parse_args()
 
@@ -79,4 +63,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
->>>>>>> c880246 (Add bow embeddings and script for generation.)

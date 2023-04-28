@@ -29,6 +29,16 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}.tsv
 sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split_ind}.tsv --train_objective "transformation-prediction"
 ```
 
+- `bow-embedding` - creates embeddings for BOW and TF-IDF models
+
+```bash
+# Pure BOW; filters out tokens based on their document frequency
+bow-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/bow_limited.tsv --max_df 0.8 --min_df 0.001 --no-tfidf
+
+# TF-IDF; does not limit tokens
+bow-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/tfidf.tsv  --tfidf
+```
+
 ## Timeline
 
 - Middle April: decide next direction based on the visualizations, classifications, clustering
