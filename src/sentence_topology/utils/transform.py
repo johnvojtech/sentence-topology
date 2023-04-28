@@ -17,11 +17,16 @@ def contextualize_embeddings(
 
     for embed in embeddings:
         if embed.trans == "seed":
-            id_to_embed[embed.id] = embed.embedding
+            id_to_embed[embed.seed_id] = embed.embedding
 
+    skipped_count = 0
+    transform = CONTEXT_MODES[mode]
     transformed = []
     for embed in embeddings:
-        new_embedding = CONTEXT_MODES[mode](id_to_embed[embed.seed_id], embed.embedding)
+        if embed.seed_id not in id_to_embed:
+            skipped_count += 1
+            continue
+        new_embedding = transform(id_to_embed[embed.seed_id], embed.embedding)
         transformed.append(
             CostraEmbedding(
                 id=embed.id,
@@ -31,4 +36,4 @@ def contextualize_embeddings(
             )
         )
 
-    return transformed
+    return transformed, skipped_count
