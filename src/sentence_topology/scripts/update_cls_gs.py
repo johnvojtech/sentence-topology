@@ -42,11 +42,8 @@ def update_analysis_results(
     *,
     analysis_results_dir: str,
     analysis_figs_dir: str,
+    cls_type_by_name: dict[str, type],
 ) -> None:
-    cls_type_by_name = {}
-    for classifier_config in DEFAULT_GRID_SEARCHED_CLASSIFIERS:
-        cls_type_by_name[classifier_config.type_.__name__] = classifier_config.type_
-
     for embed_name, embed_scores in tqdm(scores.iterrows(), total=scores.shape[0]):
         embed_name = str(embed_name)
         embed_file_name = embed_name[: embed_name.rfind(".")]
@@ -200,12 +197,17 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
+    cls_type_by_name = {}
+    for classifier_config in DEFAULT_GRID_SEARCHED_CLASSIFIERS:
+        cls_type_by_name[classifier_config.type_.__name__] = classifier_config.type_
+
     if not os.path.exists(args.gs_scores):
         logger.info("Creating new scores at %s.", args.gs_scores)
+
     scores = (
         pd.read_pickle(args.gs_scores)
         if os.path.exists(args.gs_scores)
-        else pd.DataFrame()
+        else pd.DataFrame(columns=list(cls_type_by_name.keys()))
     )
 
     if not os.path.exists(args.gs_params):
@@ -214,7 +216,7 @@ def main() -> None:
     params = (
         pd.read_pickle(args.gs_params)
         if os.path.exists(args.gs_params)
-        else pd.DataFrame()
+        else pd.DataFrame(columns=list(cls_type_by_name.keys()))
     )
 
     def fetch_embedding(name: str) -> list[CostraEmbedding]:
@@ -254,6 +256,7 @@ def main() -> None:
             fetch_embedding=fetch_embedding,
             analysis_results_dir=args.analysis_results_dir,
             analysis_figs_dir=args.analysis_figs_dir,
+            cls_type_by_name=cls_type_by_name,
         )
 
 
