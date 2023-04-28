@@ -220,9 +220,15 @@ def main() -> None:
     def fetch_embedding(name: str) -> list[CostraEmbedding]:
         embedding = list(load_embedding(os.path.join(args.embeddings_dir, name)))
         if args.context_mode is not None:
-            embedding, skipped_count = contextualize_embeddings(embedding, mode=args.context_mode)
+            embedding, skipped_count = contextualize_embeddings(
+                embedding, mode=args.context_mode
+            )
             if skipped_count > 0:
-                print(name, skipped_count)
+                logger.warn(
+                    "Unable to contextualize %d embeddings from %s.",
+                    skipped_count,
+                    name,
+                )
 
         return embedding
 

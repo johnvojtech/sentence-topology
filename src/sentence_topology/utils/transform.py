@@ -12,7 +12,7 @@ def contextualize_embeddings(
     embeddings: list[CostraEmbedding],
     *,
     mode: str = "diff",
-) -> list[CostraEmbedding]:
+) -> tuple[list[CostraEmbedding], int]:
     id_to_embed = {}
 
     for embed in embeddings:
