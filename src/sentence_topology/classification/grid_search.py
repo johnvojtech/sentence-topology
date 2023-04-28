@@ -18,7 +18,7 @@ from sentence_topology.utils import load_all_embeddings
 
 @dataclass
 class GridSearchClassifier:
-    classifier_type: type
+    type_: type
     params: dict[str, list[Any]]
 
 
@@ -45,9 +45,9 @@ def grid_search_classifiers_params(
         clsfiers, desc="Classifiers evaluated", disable=not with_bar
     ) as progress_bar:
         for classifier in progress_bar:
-            progress_bar.set_postfix(classifier=classifier.classifier_type.__name__)
+            progress_bar.set_postfix(classifier=classifier.type_.__name__)
             gs = GridSearchCV(
-                classifier.classifier_type(),
+                classifier.type_(),
                 classifier.params,
                 scoring=scoring,
                 cv=StratifiedGroupKFold(),
@@ -65,7 +65,7 @@ def grid_search_classifiers_params(
 
             evaluated.append(
                 EvaluatedGridSearchClassifier(
-                    classifier_type=classifier.classifier_type,
+                    classifier_type=classifier.type_,
                     best_params_=gs.best_params_,
                     best_score_=gs.best_score_,
                 )
@@ -76,7 +76,7 @@ def grid_search_classifiers_params(
 
 DEFAULT_GRID_SEARCHED_CLASSIFIERS = [
     GridSearchClassifier(
-        classifier_type=DecisionTreeClassifier,
+        type_=DecisionTreeClassifier,
         params={
             "max_depth": [6, 18, 32],
             "min_samples_split": [2, 5],
@@ -84,7 +84,7 @@ DEFAULT_GRID_SEARCHED_CLASSIFIERS = [
         },
     ),
     GridSearchClassifier(
-        classifier_type=MLPClassifier,
+        type_=MLPClassifier,
         params={
             "hidden_layer_sizes": [(25,), (50,), (50, 25), (25, 5)],
             "activation": ["relu", "logistic"],
@@ -92,7 +92,7 @@ DEFAULT_GRID_SEARCHED_CLASSIFIERS = [
         },
     ),
     GridSearchClassifier(
-        classifier_type=RandomForestClassifier,
+        type_=RandomForestClassifier,
         params={
             "n_estimators": [50, 100, 200],
             "max_depth": [2, 5, 25, None],
@@ -100,14 +100,14 @@ DEFAULT_GRID_SEARCHED_CLASSIFIERS = [
         },
     ),
     GridSearchClassifier(
-        classifier_type=SVC,
+        type_=SVC,
         params={
             "kernel": ["rbf", "linear"],
             "gamma": ["auto", "scale"],
         },
     ),
     GridSearchClassifier(
-        classifier_type=KNeighborsClassifier,
+        type_=KNeighborsClassifier,
         params={
             "n_neighbors": [3, 5, 10],
             "weights": ["uniform", "distance"],

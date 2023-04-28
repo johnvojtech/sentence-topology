@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+from typing import Callable, Iterable
 
 import pandas as pd
 from tqdm.auto import tqdm
@@ -9,36 +10,38 @@ from sentence_topology.classification.analysis import (
     ClassifierAnalysisResults, analyze_classifier)
 from sentence_topology.classification.grid_search import (
     DEFAULT_GRID_SEARCHED_CLASSIFIERS, grid_search_classifiers_params)
+from sentence_topology.data_types import CostraEmbedding
 from sentence_topology.utils.io import load_embedding
+from sentence_topology.utils.transform import (CONTEXT_MODES,
+                                               contextualize_embeddings)
+
+logger = logging.getLogger(__name__)
 
 
 def update_grid_search_scores_and_params(
-    scores: pd.DataFrame, params: pd.DataFrame, *, embeddings_dir: str
+    scores: pd.DataFrame,
+    params: pd.DataFrame,
+    embeddings: list[tuple[str, list[CostraEmbedding]]],
 ) -> None:
-    def should_update(entry: os.DirEntry) -> bool:
-        return (
-            entry.is_file()
-            and entry.name.endswith(".tsv")
-            and (entry.name not in scores.index or entry.name not in params.index)
-        )
+    def should_update(name: str) -> bool:
+        return name not in scores.index or name not in params.index
 
-    for entry in tqdm(os.scandir(embeddings_dir)):
-        if should_update(entry):
-            embeddings = list(load_embedding(entry.path))
+    for name, embedding in tqdm(embeddings):
+        if should_update(name):
             evals = grid_search_classifiers_params(
-                embeddings, DEFAULT_GRID_SEARCHED_CLASSIFIERS
+                embedding, DEFAULT_GRID_SEARCHED_CLASSIFIERS
             )
-            scores.loc[entry.name] = [eval.best_score_ for eval in evals]
-            params.loc[entry.name] = [eval.best_params_ for eval in evals]
+            scores.loc[name] = [eval.best_score_ for eval in evals]
+            params.loc[name] = [eval.best_params_ for eval in evals]
 
 
 def update_analysis_results(
     scores: pd.DataFrame,
     params: pd.DataFrame,
+    fetch_embedding: Callable[[str], list[CostraEmbedding]],
     *,
-    embeddings_dir: str,
     analysis_results_dir: str,
-    analysis_fig_dir: str,
+    analysis_figs_dir: str,
 ) -> None:
     cls_type_by_name = {}
     for classifier_config in DEFAULT_GRID_SEARCHED_CLASSIFIERS:
@@ -56,7 +59,7 @@ def update_analysis_results(
 
             cls_params = params.loc[embed_name, best_classifier_name]
             classifier = cls_type_by_name[best_classifier_name](**cls_params)
-            embeddings = load_embedding(os.path.join(embeddings_dir, embed_name))
+            embeddings = fetch_embedding(embed_name)
 
             analysis = analyze_classifier(list(embeddings), classifier)
             analysis.classifier_params = params.loc[embed_name, best_classifier_name]
@@ -64,13 +67,19 @@ def update_analysis_results(
             analysis.save(analysis_save_path)
 
         analysis = ClassifierAnalysisResults.load(analysis_save_path)
-        fig_save_path = os.path.join(analysis_fig_dir, f"{embed_file_name}.png")
+        fig_save_path = os.path.join(analysis_figs_dir, f"{embed_file_name}.png")
         if not os.path.exists(fig_save_path):
             fig = analysis.visualize()
             fig.savefig(
                 fig_save_path,
                 bbox_inches="tight",
             )
+
+
+def get_embedding_entries(embeddings_dir: str) -> Iterable[os.DirEntry]:
+    for entry in os.scandir(embeddings_dir):
+        if entry.is_file() and entry.name.endswith(".tsv"):
+            yield entry
 
 
 def parse_args() -> argparse.Namespace:
@@ -81,50 +90,13 @@ def parse_args() -> argparse.Namespace:
         )
     )
     parser.add_argument(
-        "--embeddings_dir",
-        type=str,
-        help="Path to directory containing all embeddings.",
-        defualt="./embeddings",
-    )
-    parser.add_argument(
-        "--results_dir",
-        type=str,
-        help="Path to directory for storing results.",
-        default="./results",
-    )
-    parser.add_argument(
-        "--analysis_results_dir",
+        "--context_mode",
         type=str,
         help=(
-            "Path to directory where to save analysis results of best classifiers. If"
-            " not given '`results_dir`/best_classifier_analysis/' is used."
+            "Mode of contextualization to apply on the embeddings before feeding them"
+            f" to classifiers. Available options are: {','.join(CONTEXT_MODES.keys())}."
         ),
         default=None,
-    )
-    parser.add_argument(
-        "--analysis_figs_dir",
-        type=str,
-        help=(
-            "Path to directory where to save analysis figures of best classifiers. If"
-            " not given '`results_dir`/best_classifier_analysis/figs/' is used."
-        ),
-        default=None,
-    )
-    parser.add_argument(
-        "--gs_scores",
-        type=str,
-        help=(
-            "Path to pickled DataFrame containing embedding-classifier table of highest"
-            " scores."
-        ),
-    )
-    parser.add_argument(
-        "--gs_params",
-        type=str,
-        help=(
-            "Path to pickled DataFrame containing embedding-classifier table of best"
-            " params."
-        ),
     )
     parser.add_argument(
         "--update_grid_search",
@@ -140,20 +112,83 @@ def parse_args() -> argparse.Namespace:
         default=True,
         help="Update analysis of best classifiers.",
     )
+    parser.add_argument(
+        "--embeddings_dir",
+        type=str,
+        help="Path to directory containing all embeddings.",
+        default="./embeddings",
+    )
+    parser.add_argument(
+        "--results_dir",
+        type=str,
+        help=(
+            "Path to directory for storing results. Default is"
+            " './results/cls_gs/`context_mode`'"
+        ),
+        default=None,
+    )
+    parser.add_argument(
+        "--analysis_results_dir_name",
+        type=str,
+        help=(
+            "Path to directory where to save analysis of best classifiers results under"
+            " `results_dir`."
+        ),
+        default="best_classifier_analysis",
+    )
+    parser.add_argument(
+        "--analysis_figs_dir_name",
+        type=str,
+        help=(
+            "Path to directory where to save analysis figures of best classifiers under"
+            " `results_dir`."
+        ),
+        default=os.path.join(
+            "best_classifier_analysis",
+            "figs",
+        ),
+    )
+    parser.add_argument(
+        "--gs_scores",
+        type=str,
+        help=(
+            "Path to pickled DataFrame containing embedding-classifier table of highest"
+            " scores."
+        ),
+        required=True,
+    )
+    parser.add_argument(
+        "--gs_params",
+        type=str,
+        help=(
+            "Path to pickled DataFrame containing embedding-classifier table of best"
+            " params."
+        ),
+        required=True,
+    )
 
     args = parser.parse_args()
 
+    if args.results_dir is None:
+        args.results_dir = os.path.join(
+            ".",
+            "results",
+            "cls_gs",
+            args.context_mode if args.context_mode is not None else "no_context",
+        )
     os.makedirs(args.results_dir, exist_ok=True)
 
-    if args.analysis_results_dir is None:
-        args.analysis_results_dir = os.path.join(
-            args.results_dir, "best_classifier_analysis"
-        )
-
+    args.analysis_results_dir = os.path.join(
+        args.results_dir,
+        args.analysis_results_dir_name,
+    )
     os.makedirs(args.analysis_results_dir, exist_ok=True)
-    if args.analysis_fig_dir is None:
-        args.analysis_fig_dir = os.path.join(args.analysis_fig_dir, "figs")
-    os.makedirs(args.analysis_fig_dir, exist_ok=True)
+
+    args.analysis_figs_dir = os.path.join(
+        args.results_dir,
+        args.analysis_figs_dir_name,
+    )
+    os.makedirs(args.analysis_figs_dir, exist_ok=True)
 
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
@@ -165,34 +200,52 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
+    if not os.path.exists(args.gs_scores):
+        logger.info("Creating new scores at %s.", args.gs_scores)
     scores = (
         pd.read_pickle(args.gs_scores)
         if os.path.exists(args.gs_scores)
         else pd.DataFrame()
     )
+
+    if not os.path.exists(args.gs_params):
+        logger.info("Creating new params at %s.", args.gs_params)
+
     params = (
         pd.read_pickle(args.gs_params)
         if os.path.exists(args.gs_params)
         else pd.DataFrame()
     )
 
+    def fetch_embedding(name: str) -> list[CostraEmbedding]:
+        embedding = list(load_embedding(os.path.join(args.embeddings_dir, name)))
+        if args.context_mode is not None:
+            embedding = contextualize_embeddings(embedding, mode=args.context_mode)
+
+        return embedding
+
     if args.update_grid_search:
-        update_grid_search_scores_and_params(
-            scores, params, embeddings_dir=args.embeddings_dir
-        )
+        logger.info("Updating grid search scores and params.")
+
+        embeds_to_update = []
+        for entry in get_embedding_entries(args.embeddings_dir):
+            if entry.name not in scores.index or entry.name not in params.index:
+                embeds_to_update.append((entry.name, fetch_embedding(entry.name)))
+
+        update_grid_search_scores_and_params(scores, params, embeds_to_update)
         scores.to_pickle(args.gs_scores)
         params.to_pickle(args.gs_params)
 
     scores = pd.read_pickle(args.gs_scores)
-    params = pd.read_pickle(args.params)
+    params = pd.read_pickle(args.gs_params)
 
     if args.update_analysis:
         update_analysis_results(
             scores,
             params,
-            embeddings_dir=args.embeddings_dir,
+            fetch_embedding=fetch_embedding,
             analysis_results_dir=args.analysis_results_dir,
-            analysis_fig_dir=args.analysis_figs_dir,
+            analysis_figs_dir=args.analysis_figs_dir,
         )
 
 

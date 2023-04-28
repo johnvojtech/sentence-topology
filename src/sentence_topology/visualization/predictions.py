@@ -43,4 +43,5 @@ def draw_distributions(conf_matrix: pd.DataFrame, axes: plt.Axes) -> None:
         stat="percent",
         ax=axes,
     )
+    axes.set_xticks(axes.get_xticks())
     axes.set_xticklabels(axes.get_xticklabels(), rotation=90)
