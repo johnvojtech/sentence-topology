@@ -24,6 +24,8 @@ dependencies = [
 [project.scripts]
 sent-transformer-embedding = "sentence_topology.scripts.sent_transformer_embedding:main"
 bow-embedding = "sentence_topology.scripts.bow_embedding:main"
+update-cls-gs = "sentence_topology.scripts.update_cls_gs:main"
+
 
 [project.urls]
 homepage = "https://github.com/johnvojtech/sentence-topology"
