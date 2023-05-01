@@ -53,13 +53,15 @@ sent-transfomer-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/{model}_{split
 - [ ] training a simple classifier on the embeddings **David**
   - [ ] subtracting seed before classifying
   - [ ] TF-IDF embeddings
+  - [ ] Permutate words (SBERT?)
 - [ ] Hierarchical clustering - dendogram ? Maybe
   - [ ] data **Vojtěch**
   - [ ] visualization **Leixin**
+- [ ] Accuracy by cancelling some easy-mixedup labels **Leixin**
 - [ ] visualize the amount transformation using the more transformed and less transformed columns
 - [ ] Write background
 - [ ] Methodology steps
-  
+- [ ] Add the survey of Classification methods   **Leixin**
 
 ### Backqueue
 
