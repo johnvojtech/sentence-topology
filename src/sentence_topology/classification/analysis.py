@@ -8,7 +8,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, get_scorer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
@@ -54,7 +54,8 @@ class ClassifierAnalysisResults:
     classifier_type: type
     classifier_params: dict[str, Any]
     confusion_matrix: pd.DataFrame
-    accuracy: float
+    score: float
+    score_name: str
     macro_metrics: dict[str, float]
     report: pd.DataFrame
 
@@ -73,7 +74,7 @@ class ClassifierAnalysisResults:
             "\n".join(
                 [
                     f"classifier: {self.classifier_type.__name__}",
-                    f"accuracy: {self.accuracy:.5f}",
+                    f"{self.score_name}: {self.score:.5f}",
                     f"params: {self.classifier_params}",
                 ]
             ),
@@ -105,6 +106,7 @@ def analyze_classifier(
     classifier,
     *,
     test_split_size: float = 0.5,
+    scoring: str = "accuracy",
 ) -> ClassifierAnalysisResults:
     data = create_embedding_transformation_prediction_data(embeddings)
     class_names = cast(list[str], data.label_encoder.classes_)
@@ -141,11 +143,14 @@ def analyze_classifier(
         columns=class_names,
     )
 
+    score = get_scorer(scoring)(label_test, predictions)
+
     return ClassifierAnalysisResults(
         classifier_type=type(classifier),
         classifier_params=classifier.get_params(deep=False),
         report=report,
-        accuracy=cast(float, metrics["accuracy"]),
+        score=score,
+        score_name=scoring,
         macro_metrics=cast(dict[str, float], metrics["macro avg"]),
         confusion_matrix=conf_matrix,
     )

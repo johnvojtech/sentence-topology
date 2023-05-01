@@ -22,6 +22,8 @@ def update_grid_search_scores_and_params(
     scores: pd.DataFrame,
     params: pd.DataFrame,
     embeddings: list[tuple[str, list[CostraEmbedding]]],
+    *,
+    scoring: str,
 ) -> None:
     def should_update(name: str) -> bool:
         return name not in scores.index or name not in params.index
@@ -29,7 +31,9 @@ def update_grid_search_scores_and_params(
     for name, embedding in tqdm(embeddings):
         if should_update(name):
             evals = grid_search_classifiers_params(
-                embedding, DEFAULT_GRID_SEARCHED_CLASSIFIERS
+                embedding,
+                DEFAULT_GRID_SEARCHED_CLASSIFIERS,
+                scoring=scoring,
             )
             scores.loc[name] = [eval.best_score_ for eval in evals]
             params.loc[name] = [eval.best_params_ for eval in evals]
@@ -43,6 +47,7 @@ def update_analysis_results(
     analysis_results_dir: str,
     analysis_figs_dir: str,
     cls_type_by_name: dict[str, type],
+    scoring: str,
 ) -> None:
     for embed_name, embed_scores in tqdm(scores.iterrows(), total=scores.shape[0]):
         embed_name = str(embed_name)
@@ -58,7 +63,7 @@ def update_analysis_results(
             classifier = cls_type_by_name[best_classifier_name](**cls_params)
             embeddings = fetch_embedding(embed_name)
 
-            analysis = analyze_classifier(list(embeddings), classifier)
+            analysis = analyze_classifier(list(embeddings), classifier, scoring=scoring)
             analysis.classifier_params = params.loc[embed_name, best_classifier_name]
 
             analysis.save(analysis_save_path)
@@ -163,6 +168,12 @@ def parse_args() -> argparse.Namespace:
         ),
         required=True,
     )
+    parser.add_argument(
+        "--scoring",
+        type=str,
+        help="Scoring method to identify better classifiers.",
+        default="accuracy",
+    )
 
     args = parser.parse_args()
 
@@ -242,7 +253,9 @@ def main() -> None:
             if entry.name not in scores.index or entry.name not in params.index:
                 embeds_to_update.append((entry.name, fetch_embedding(entry.name)))
 
-        update_grid_search_scores_and_params(scores, params, embeds_to_update)
+        update_grid_search_scores_and_params(
+            scores, params, embeds_to_update, scoring=args.scoring
+        )
         scores.to_pickle(args.gs_scores)
         params.to_pickle(args.gs_params)
 
@@ -257,6 +270,7 @@ def main() -> None:
             analysis_results_dir=args.analysis_results_dir,
             analysis_figs_dir=args.analysis_figs_dir,
             cls_type_by_name=cls_type_by_name,
+            scoring=args.scoring,
         )
 
 
