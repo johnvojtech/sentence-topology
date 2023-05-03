@@ -13,8 +13,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 from sentence_topology.data_types import CostraEmbedding
-from sentence_topology.visualization.predictions import (draw_confusion_matrix,
-                                                         draw_distributions)
+from sentence_topology.visualization.predictions import (
+    draw_confusion_matrix,
+    draw_distributions,
+)
 
 
 @dataclass
@@ -143,7 +145,7 @@ def analyze_classifier(
         columns=class_names,
     )
 
-    score = get_scorer(scoring)(label_test, predictions)
+    score = get_scorer(scoring)(classifier, feat_test, label_test)
 
     return ClassifierAnalysisResults(
         classifier_type=type(classifier),
