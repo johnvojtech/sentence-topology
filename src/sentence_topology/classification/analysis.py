@@ -13,10 +13,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 from sentence_topology.data_types import CostraEmbedding
-from sentence_topology.visualization.predictions import (
-    draw_confusion_matrix,
-    draw_distributions,
-)
+from sentence_topology.visualization.predictions import (draw_confusion_matrix,
+                                                         draw_distributions)
 
 
 @dataclass
@@ -109,6 +107,7 @@ def analyze_classifier(
     *,
     test_split_size: float = 0.5,
     scoring: str = "accuracy",
+    # TODO: do CV and aggregate results
 ) -> ClassifierAnalysisResults:
     data = create_embedding_transformation_prediction_data(embeddings)
     class_names = cast(list[str], data.label_encoder.classes_)

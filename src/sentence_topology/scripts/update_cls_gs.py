@@ -1,23 +1,16 @@
 import argparse
 import logging
 import os
-from typing import Callable, Iterable
+from typing import Iterable
 
 import pandas as pd
 from tqdm.auto import tqdm
 
-from sentence_topology.classification.analysis import (
-    ClassifierAnalysisResults,
-    analyze_classifier,
-)
+from sentence_topology.classification.analysis import analyze_classifier
 from sentence_topology.classification.grid_search import (
-    DEFAULT_GRID_SEARCHED_CLASSIFIERS,
-    GridSearchClassifier,
-    grid_search_classifiers_params,
-)
-from sentence_topology.data_types import CostraEmbedding
-from sentence_topology.utils.io import load_embedding
-from sentence_topology.utils.transform import CONTEXT_MODES, contextualize_embeddings
+    DEFAULT_GRID_SEARCHED_CLASSIFIERS, GridSearchClassifier,
+    grid_search_classifiers_params)
+from sentence_topology.utils.transform import CONTEXT_MODES, EmbeddingsLoader
 
 logger = logging.getLogger(__name__)
 
@@ -25,13 +18,15 @@ logger = logging.getLogger(__name__)
 def update_grid_search_scores_and_params(
     scores: pd.DataFrame,
     params: pd.DataFrame,
-    embeddings: list[tuple[str, list[CostraEmbedding]]],
+    embed_loader: EmbeddingsLoader,
     *,
     scoring: str,
 ) -> None:
-    for name, embedding in tqdm(embeddings):
+    for name in embed_loader.list_all(
+        tqdm_enable=True, tqdm_desc="Grid searching embeddings"
+    ):
         evals = grid_search_classifiers_params(
-            embedding,
+            embed_loader.load(name),
             DEFAULT_GRID_SEARCHED_CLASSIFIERS,
             scoring=scoring,
         )
@@ -43,13 +38,15 @@ def update_analysis_results(
     *,
     scores: pd.DataFrame,
     params: pd.DataFrame,
-    embeddings: list[tuple[str, list[CostraEmbedding]]],
+    embed_loader: EmbeddingsLoader,
     analysis_results_dir: str,
     analysis_figs_dir: str,
     gs_cls_map: dict[str, GridSearchClassifier],
     scoring: str,
 ) -> None:
-    for embed_name, embedding in tqdm(embeddings):
+    for embed_name in embed_loader.list_all(
+        tqdm_enable=True, tqdm_desc="Analysing embeddings"
+    ):
         embed_basename = embed_name[: embed_name.rfind(".")]
         analysis_save_path = os.path.join(analysis_results_dir, f"{embed_basename}.pkl")
 
@@ -59,7 +56,9 @@ def update_analysis_results(
         classifier = gs_cls_map[best_classifier_name].estimator
         classifier.set_params(**cls_params)
 
-        analysis = analyze_classifier(embedding, classifier, scoring=scoring)
+        analysis = analyze_classifier(
+            embed_loader.load(embed_name), classifier, scoring=scoring
+        )
         analysis.classifier_params = cls_params
 
         analysis.save(analysis_save_path)
@@ -168,6 +167,13 @@ def parse_args() -> argparse.Namespace:
         help="Scoring method to identify better classifiers.",
         default="accuracy",
     )
+    parser.add_argument(
+        "--equalize_trans",
+        type=bool,
+        action=argparse.BooleanOptionalAction,
+        help="Equalize distributions of sentence transformations before fitting.",
+        default=False,
+    )
 
     args = parser.parse_args()
 
@@ -220,38 +226,18 @@ def main() -> None:
         else pd.DataFrame(columns=list(DEFAULT_GRID_SEARCHED_CLASSIFIERS.keys()))
     )
 
-    def fetch_embedding(name: str) -> tuple[list[CostraEmbedding], bool]:
-        embedding = list(load_embedding(os.path.join(args.embeddings_dir, name)))
-        valid = True
-        if args.context_mode is not None:
-            embedding, skipped_count = contextualize_embeddings(
-                embedding, mode=args.context_mode
-            )
-            valid = False
-            if skipped_count > 0:
-                logger.warn(
-                    "Unable to contextualize %d embeddings from %s. Skipping",
-                    skipped_count,
-                    name,
-                )
+    embed_loader = EmbeddingsLoader(
+        args.embeddings_dir,
+        context_mode=args.context_mode,
+        equalize_trans=args.equalize_trans,
+        filter_cb=lambda name: name not in scores.index or name not in params.index,
+    )
 
-        return embedding, valid
-
-    embeds_to_update = []
-    for entry in get_embedding_entries(args.embeddings_dir):
-        if entry.name not in scores.index or entry.name not in params.index:
-            embedding, valid = fetch_embedding(entry.name)
-            if valid and (
-                entry.name not in scores.index or entry.name not in params.index
-            ):
-                embeds_to_update.append((entry.name, embedding))
-
-    logger.info("Updating %d embeddings.", len(embeds_to_update))
     if args.update_grid_search:
         logger.info("Updating grid search scores and params.")
 
         update_grid_search_scores_and_params(
-            scores, params, embeds_to_update, scoring=args.scoring
+            scores, params, embed_loader, scoring=args.scoring
         )
         scores.to_pickle(args.gs_scores)
         params.to_pickle(args.gs_params)
@@ -263,7 +249,7 @@ def main() -> None:
         update_analysis_results(
             scores=scores,
             params=params,
-            embeddings=embeds_to_update,
+            embed_loader=embed_loader,
             analysis_results_dir=args.analysis_results_dir,
             analysis_figs_dir=args.analysis_figs_dir,
             scoring=args.scoring,

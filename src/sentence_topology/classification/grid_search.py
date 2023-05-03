@@ -8,14 +8,13 @@ from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network._multilayer_perceptron import MLPClassifier
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.preprocessing import StandardScaler
 from tqdm.auto import tqdm
 
-from sentence_topology.classification.analysis import (
-    create_embedding_transformation_prediction_data,
-)
+from sentence_topology.classification.analysis import \
+    create_embedding_transformation_prediction_data
 from sentence_topology.data_types import CostraEmbedding
 
 
