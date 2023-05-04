@@ -25,6 +25,8 @@ def update_grid_search_scores_and_params(
     for name in embed_loader.list_all(
         tqdm_enable=True, tqdm_desc="Grid searching embeddings"
     ):
+        if name in scores.index and name in params.index:
+            continue
         evals = grid_search_classifiers_params(
             embed_loader.load(name),
             DEFAULT_GRID_SEARCHED_CLASSIFIERS,
@@ -43,6 +45,7 @@ def update_analysis_results(
     analysis_figs_dir: str,
     gs_cls_map: dict[str, GridSearchClassifier],
     scoring: str,
+    cross_validation: bool,
 ) -> None:
     for embed_name in embed_loader.list_all(
         tqdm_enable=True, tqdm_desc="Analysing embeddings"
@@ -57,7 +60,10 @@ def update_analysis_results(
         classifier.set_params(**cls_params)
 
         analysis = analyze_classifier(
-            embed_loader.load(embed_name), classifier, scoring=scoring
+            embed_loader.load(embed_name),
+            classifier,
+            scoring=scoring,
+            cross_validation=cross_validation,
         )
         analysis.classifier_params = cls_params
 
@@ -144,22 +150,29 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--cv_analysis",
+        type=bool,
+        action=argparse.BooleanOptionalAction,
+        help=(
+            "Run classifier analysis using cross-validation and aggregate the results."
+        ),
+        default=False,
+    )
+    parser.add_argument(
         "--gs_scores",
         type=str,
         help=(
             "Path to pickled DataFrame containing embedding-classifier table of highest"
-            " scores."
+            " scores. Defaults to `results_dir`/scores.pkl."
         ),
-        required=True,
     )
     parser.add_argument(
         "--gs_params",
         type=str,
         help=(
             "Path to pickled DataFrame containing embedding-classifier table of best"
-            " params."
+            " params. Defaults to `results_dir`/params.pkl"
         ),
-        required=True,
     )
     parser.add_argument(
         "--scoring",
@@ -198,6 +211,12 @@ def parse_args() -> argparse.Namespace:
     )
     os.makedirs(args.analysis_figs_dir, exist_ok=True)
 
+    if args.gs_scores is None:
+        args.gs_scores = os.path.join(args.results_dir, "scores.pkl")
+
+    if args.gs_params is None:
+        args.gs_params = os.path.join(args.results_dir, "params.pkl")
+
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
     )
@@ -230,7 +249,6 @@ def main() -> None:
         args.embeddings_dir,
         context_mode=args.context_mode,
         equalize_trans=args.equalize_trans,
-        filter_cb=lambda name: name not in scores.index or name not in params.index,
     )
 
     if args.update_grid_search:
@@ -254,6 +272,7 @@ def main() -> None:
             analysis_figs_dir=args.analysis_figs_dir,
             scoring=args.scoring,
             gs_cls_map=DEFAULT_GRID_SEARCHED_CLASSIFIERS,
+            cross_validation=args.cv_analysis,
         )
 
 

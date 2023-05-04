@@ -25,23 +25,7 @@ def draw_confusion_matrix(
 def draw_distributions(conf_matrix: pd.DataFrame, axes: plt.Axes) -> None:
     true = conf_matrix.sum(axis=1)
     pred = conf_matrix.sum(axis=0)
-    types = []
-    classes = []
-
-    for type_, counts in zip(["True", "Predicted"], [true, pred]):
-        for cls, count in counts.items():
-            for _ in range(count):
-                types.append(type_)
-                classes.append(cls)
-
-    dists = pd.DataFrame({"Distribution": types, "Classes": classes})
-    sns.histplot(
-        dists,
-        x="Classes",
-        hue="Distribution",
-        element="step",
-        stat="percent",
-        ax=axes,
-    )
-    axes.set_xticks(axes.get_xticks())
-    axes.set_xticklabels(axes.get_xticklabels(), rotation=90)
+    hists = pd.DataFrame({"Predicted": preds, "True": true, "Label": preds.index})
+    hists.set_index("Label", inplace=True)
+    hists.plot.bar(ax=axes)
+    axes.set_xticks(rotation=90)

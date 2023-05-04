@@ -90,12 +90,10 @@ class EmbeddingsLoader:
         *,
         context_mode: Optional[str],
         equalize_trans: bool,
-        filter_cb: Optional[Callable[[str], bool]] = None,
     ) -> None:
         self._embeddings_dir = embeddings_dir
         self._context_mode = context_mode
         self._equalize_trans = equalize_trans
-        self._filter = (lambda _: True) if filter_cb is None else filter_cb
 
     def list_all(
         self, *, tqdm_enable: bool = False, tqdm_desc: str = "Processing embeddings"
@@ -109,7 +107,7 @@ class EmbeddingsLoader:
         ) as progress_bar:
             for entry in progress_bar:
                 progress_bar.set_postfix(embedding=entry.name)
-                if entry.name.endswith(".tsv") and self._filter(entry.name):
+                if entry.name.endswith(".tsv"):
                     try:
                         self.load(entry.name)
                         yield entry.name
