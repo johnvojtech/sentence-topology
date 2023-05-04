@@ -214,7 +214,7 @@ class ClassifierAnalysisResults:
             top=0.87,
             width_ratios=[7.5, 1],
             height_ratios=[10, 4, 4],
-            hspace=0.6,
+            hspace=0.65,
         )
 
         conf_matrix_axis = fig.add_subplot(grid[0, :])
