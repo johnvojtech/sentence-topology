@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pickle
+import seaborn as sns
 from dataclasses import dataclass
 from functools import reduce
 from typing import Any, cast
@@ -14,8 +15,11 @@ from sklearn.model_selection import StratifiedGroupKFold, train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 from sentence_topology.data_types import CostraEmbedding
-from sentence_topology.visualization.predictions import (draw_confusion_matrix,
-                                                         draw_distributions)
+from sentence_topology.visualization.predictions import (
+    draw_classification_report,
+    draw_confusion_matrix,
+    draw_distributions_from_conf_matrix,
+)
 
 
 @dataclass
@@ -187,34 +191,42 @@ class ClassifierAnalysisResults:
         return agg_dict
 
     def visualize(self) -> plt.Figure:
-        fig = plt.figure(figsize=(12, 14))
+        sns.set_theme()
+        fig = plt.figure(figsize=(12, 20))
         fig.suptitle(
             "\n".join(
                 [
                     f"classifier: {self.classifier_type.__name__}",
-                    f"{self.score_name}: {self.score:.5f}",
                     f"params: {self.classifier_params}",
+                    f"{self.score_name}: {self.score:.5f}",
+                    f"accuracy: {self.accuracy:.5f}",
+                    f"macro avg.: {self.macro_avg}",
+                    f"weighted avg.: {self.weighted_avg}",
                 ]
             ),
             x=0.44,
             y=0.95,
         )
         grid = gridspec.GridSpec(
-            2,
+            3,
             2,
             figure=fig,
+            top=0.87,
             width_ratios=[7.5, 1],
-            height_ratios=[8, 4],
+            height_ratios=[10, 4, 4],
             hspace=0.6,
         )
 
-        conf_matrix_axis = fig.add_subplot(grid[:-1, :])
-        dist_matrix_axis = fig.add_subplot(grid[-1, :-1])
+        conf_matrix_axis = fig.add_subplot(grid[0, :])
+        dist_axis = fig.add_subplot(grid[1, :-1])
+        report_axis = fig.add_subplot(grid[-1, :-1])
 
         conf_matrix_axis.set_title("Normalized confusion matrix")
         draw_confusion_matrix(self.confusion_matrix, conf_matrix_axis)
-        dist_matrix_axis.set_title("Label distribution")
-        draw_distributions(self.confusion_matrix, dist_matrix_axis)
+        dist_axis.set_title("Label distribution")
+        draw_distributions_from_conf_matrix(self.confusion_matrix, dist_axis)
+        report_axis.set_title("Metrics per label")
+        draw_classification_report(self.report, report_axis)
 
         return fig
 
