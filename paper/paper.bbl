@@ -1,0 +1,15 @@
+\begin{thebibliography}{2}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{Reynolds et~al.(2009)}]{reynolds2009gaussian}
+Douglas~A Reynolds et~al. 2009.
+\newblock Gaussian mixture models.
+\newblock \emph{Encyclopedia of biometrics}, 741(659-663).
+
+\bibitem[{Singh et~al.(2010)Singh, Pal, and Jabr}]{5298967}
+Ravindra Singh, Bikash~C. Pal, and Rabih~A. Jabr. 2010.
+\newblock \href {https://doi.org/10.1109/TPWRS.2009.2030271} {Statistical
+  representation of distribution system loads using gaussian mixture model}.
+\newblock \emph{IEEE Transactions on Power Systems}, 25(1):29--37.
+
+\end{thebibliography}
