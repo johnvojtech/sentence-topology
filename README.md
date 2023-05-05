@@ -63,6 +63,7 @@ bow-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/tfidf.tsv  --tfidf
 - [ ] training a simple classifier on the embeddings **David**
   - [ ] subtracting seed before classifying
   - [ ] TF-IDF embeddings
+  - [ ] Permutate words (SBERT?)
 - [ ] Hierarchical clustering - dendogram ? Maybe
   - [ ] data **Vojtěch**
   - [ ] visualization **Leixin**
