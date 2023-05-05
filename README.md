@@ -41,32 +41,45 @@ bow-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/tfidf.tsv  --tfidf
 
 ## Timeline
 
-- Middle April: decide next direction based on the visualizations, classifications, clustering
-- End of May: Starting to wrap up
-- End of june: Finished for the purpose of MT subject
+- April: decide next direction based on the visualizations, classifications, clustering
+- End of April: Starting to wrap up
+- Middle of May: Finished for the purpose of MT subject
+
+
+## Dones
+
+- [x] generate random embeddings **Vojtěch**
+- [x] visualize transformations for given seed **Leixin**
+- [x] training a simple classifier on the embeddings **David**
+  - [x] predicting transformation
+  - [x] using decision trees (or other explainable models) to explain why the embeddings are classified as such
+  - [x] Confussion matrices on all embedding **David**
+  
 
 ## Ideas
 
 ### Prioritized
 
-- [x] visualize transformations for given seed **Leixin**
 - [ ] training a simple classifier on the embeddings **David**
-  - [ ] predicting transformation
-  - [ ] predicting similar ids, dissimilar ids
-  - [ ] using decision trees (or other explainable models) to explain why the embeddings are classified as such
-  - [ ] Confussion matrices on all embedding **David**
-- [x] generate random embeddings **Vojtěch**
+  - [ ] subtracting seed before classifying
+  - [ ] TF-IDF embeddings
+- [ ] Hierarchical clustering - dendogram ? Maybe
+  - [ ] data **Vojtěch**
+  - [ ] visualization **Leixin**
+- [ ] Accuracy by cancelling some easy-mixedup labels **Leixin**
 - [ ] visualize the amount transformation using the more transformed and less transformed columns
-
+- [ ] Write background
+- [ ] Methodology steps
+- [ ] Add the survey of Classification methods   **Leixin**
 
 ### Backqueue
 
 
-
+- [ ] predicting similar ids, dissimilar ids
 - [ ] have pipelines for evaluating all embeddings
   - clustering
   - visualization
-  - classification
+  - [x] classification
 - [ ] clustering of embeddings to see what the cluster will be
   - try different clustering algorithms
   - maybe hierarchical clustering
@@ -87,3 +100,4 @@ bow-embedding -i ./data/COSTRA1.1.tsv -o ./embeddings/tfidf.tsv  --tfidf
 - [ ] Define what would be the idea result -- document in google doc
   - Good clustering of transformed embeddings - seed embeddings
   - High accuracy of classifiers predicting transformation from embeddings
+- [ ] Look at the sentences which were classified correctly. Qualitative analysis, look at lexical forms.
