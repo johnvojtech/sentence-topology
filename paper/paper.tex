@@ -11,11 +11,13 @@
 \usepackage{times}
 \usepackage{latexsym}
 
-% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+% For proper rendering and hyphenation of words containing Latin characters
+% (including in bib files)
 \usepackage[T1]{fontenc}
 % For Vietnamese characters
 % \usepackage[T5]{fontenc}
-% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other
+% character sets
 
 % This assumes your files are encoded as UTF8
 \usepackage[utf8]{inputenc}
@@ -31,13 +33,30 @@
 \usepackage{inconsolata}
 \usepackage{graphicx}
 
-% If the title and author information does not fit in the area allocated, uncomment the following
+% If the title and author information does not fit in the area allocated,
+% uncomment the following
 %
 %\setlength\titlebox{<dim>}
 %
 % and set <dim> to something 5cm or larger.
 
-\title{Instructions for ACL 2023 Proceedings}
+% Tables
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% Urls
+\usepackage{hyperref}
+
+% For naming embeddings
+\newcommand{\Embed}[1]{\texttt{#1}}
+
+% For naming classifiers
+\newcommand{\Cls}[1]{\texttt{#1}}
+
+% For naming transformations
+\newcommand{\Trans}[1]{\textsl{`#1'}}
+
+\title{Semantic information inside sentence embeddings}
 
 
 
@@ -46,7 +65,11 @@
     Seminar für Sprachwissenschaft,
     Universität Tübingen, Germany \\ 
     \texttt{leixin.zhang@student.uni-tuebingen.de}
-    }%\\\And
+    }
+\author{David Burian\\
+  Charles University, Prague\\
+  \texttt{david.burian@matfyz.cz}
+  }
   % Second Author \\
   % Affiliation / Address line 1 \\
   % Affiliation / Address line 2 \\
@@ -55,6 +78,7 @@
 
 \begin{document}
 \maketitle
+
 \begin{abstract}
 This is abstract
 \end{abstract}
@@ -62,12 +86,267 @@ This is abstract
 \section{Introduction}
 
 
-\section{Previous studies}
+\section{Related work}
 
-\section{Methodology}
+% Costra corpus
+Costra corpus~\cite{baranvcikova2020costra}
+
+% SBERT
+SBERT~\cite{reimers2019sentence}
+
+% Doc2vec
+Doc2vec~\cite{le2014distributed}
 
 
-\section{Evaluating Sentence Embeddings with Gaussian Mixture}
+\section{Experiments}
+
+\subsection{Costra corpus}
+
+% Deep dive into the properties of the datsaet
+%   - transformation terminology
+%   - types and explanations of transformations
+%   - dataset statistics (count of seeds, sentences in total, transformation
+%   distributions)
+
+\subsection{Embeddings}\label{sec:embeddings}
+
+% List the embeddings we are going to work with. Focus only on the core ones,
+% which are used often throughout the tasks.
+We focus mainly on two sets of embeddings: \Embed{doc2vec} predicted by Doc2vec
+model trained on 1M of Czech sentences and \Embed{sbert} predicted by
+pretrained SBERT multilingual model. Additionally we also experimented with
+supervised method using the same SBERT model --- we call this embedding
+\Embed{sbert\_supervised}.
+
+% TODO: doc2vec training
+
+To obtain \Embed{sbert\_supervised} we splitted the corpus into 5 folds. For
+each fold, the model trained on the remaining 4 folds and produced embeddings
+for the one remaining fold. This gave us 5 sets of disjunct embeddings, each
+trained on slightly different data. For training we used softmax loss, which
+classifies sentence and its corresponding seed sentence into the set of all
+possible transformations. This gives the model incentive to produce embeddings
+that are easily distinguishable for different transformations.
+
+
+\subsection{Tasks}
+
+% High overview of the tasks that were carried out as well as some motivation for
+% doing them. Give the reader a quick overview of the work we've done.
+
+\subsubsection{Probing tasks}
+
+We designed a set of probing tasks which aim to test whether the embeddings
+contain semantic information while ignoring how exactly it is encoded. More
+specifically we ask a classifier to predict the transformation used to obtain
+the given embedding.
+
+The motivation for these tasks is that if the embedding contains semantic
+information (in our case the type of transformation used), it would be
+beneficial for the classifier to find and use this information. This would
+boost its scores and make it standout.
+
+We test two settings: \emph{no-context} and \emph{contextualized}. In
+no-context setting the classifier receives only the sentence embedding itself
+and test which (if any) transformations can be reliably determined without the
+knowledge of the seed sentence. In the contextualized setting we pass both the
+sentence embedding and the embedding of the corresponding seed sentence. This
+enables the classifier to examine the relationships between the transformed and
+seed sentences. The results are presented in Section~\ref{sec:probing_results},
+the complete method is described in detail in
+Appendix~\ref{appendix:probing_method}.
+
+
+\section{Results}
+
+%Enumeration of the tasks, for each task:
+%  - starBriefly* describe the method used. Citing papers instead of
+%  explaining.
+%  - In case more information is needed (detailed method, implementation
+%  notes), put it in an Appendix.
+%  - Present results. Pinpoint the interesting stuff (in bold?)
+
+\subsection{Probing for transformation prediction}\label{sec:probing_results}
+
+Besides the already described embeddings in Section~\ref{sec:embeddings}, we
+also add their versions with randomly permutated labels within sentences with
+the same seed sentence (named \Embed{mixup\_by\_seed\_}) and several types
+bag-of-words (\emph{BOW}) vectors. The \Embed{mixup\_by\_seed\_} embeddings
+serve as a comparative random baseline. We experimented with two types of BOW
+vectors --- pure bow vector having ones at positions corresponding to words
+included in the given sentence (named \Embed{bow}) and TF-IDF weighted bow
+vectors (named \Embed{tfidf}). Additionally we tried to limit the amount of
+words registered in order to decrease the dimensionality of the vectors,
+however this failed to increase the classifiers' scores and therefore we omit
+them in the rest of this section. Dimensions of all embeddings are presented in
+Table~\ref{tab:embeddings_dim}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{l  c c}
+    \toprule
+    Embedding & Dimension & Sparseness\\
+    \midrule
+    \Embed{doc2vec} & 512 & 0\%\\
+    \Embed{sbert} & 384 & 0\%\\
+    \Embed{bow} & 8374 & 99.89\%\\
+    \Embed{tfidf} & 8374 & 99.89\%\\
+    \bottomrule
+  \end{tabular}
+  \caption{Dimensionality and sparseness as the percentage of zeros of used
+  embeddings.}\label{tab:embeddings_dim}
+\end{table}
+
+We employ several types of classifiers: Random Forests
+(\Cls{RandomForestClassifier}), Support Vector Machine (\Cls{SVC}) and
+K-Nearest neighbours (\Cls{KNeighboursClassifier}).
+
+
+In summary, our entire pipeline is as follows:
+\begin{enumerate}
+  \item For each embedding, we consider only a random sample with uniform
+    distribution of transformations and ignore the embeddings of the seed
+    sentences.
+  \item For each embedding and classifier we run a 5-fold cross-validated grid
+    search over several parameters, which gives us the best model for given
+    embedding.
+  \item We train each embedding on the classifier which performed the best
+    using cross-validation.
+\end{enumerate}
+
+More details about the pipeline can be found in
+Appendix~\ref{appendix:probing_method}.
+
+\subsubsection{Contextualized setting}
+
+We tried two methods of contextualization: \emph{concatenating} the two
+embeddings and \emph{subtracting} the seed embedding from the sentence
+embedding. Since the method using difference performed better, we omit the
+concatenation results.
+
+We report the grid search results in
+Figure~\ref{fig:cls_gs_diff_embed_comparison}. The best performing embeddings
+were those produced by SBERT\@. Supervised SBERT embeddings differ
+significantly from the unsupervised ones only in superior performance of
+\Cls{KNeighboursClassifier}. This suggests better local structure in terms of
+the sentence transformation.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figs/cls_gs_diff_embed_comparison.png}
+
+  \caption{Grid search F1 macro averaged scores of contextualized embeddings.
+  The reported scores of \Embed{sbert\_supervised} are the mean scores of all
+  SBERT supervised embeddings.
+  }\label{fig:cls_gs_diff_embed_comparison}
+
+\end{figure}
+
+Moreover the BOW embeddings surpassed \Embed{doc2vec} embedding,
+proving that for prediction of transformation, lexical features are more
+valuable than any information extracted by our trained Doc2vec model.
+
+% TODO?: RandomForest performence on sparse embeddings
+
+In Figure~\ref{fig:cls_gs_diff_labels} we show the performance of best
+classifiers per each label for the most performant dense and lexical
+embeddings: \Embed{sbert} and \Embed{tfidf}. We can identify four
+transformations as being well-predicted having around 0.80 f1-score. However
+the powerful processing of SBERT offered significant advantage to pure lexical
+information only for two of those: \Trans{past} and \Trans{future}. We see even
+bigger difference for \Trans{opposite meaning}, even if it reached just 0.4
+f1-score.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./figs/cls_gs_diff_labels.png}
+
+  \caption{Comparison of F1 score per each transformation of best classifiers
+  for \Embed{sbert} and \Embed{tfidf} embedding in contextualized
+  setting.}\label{fig:cls_gs_diff_labels}
+\end{figure}
+
+In order to examine the most confused transformations we summed confusion
+matrices of the top 3 most performant embeddings. The resulting matrix is shown
+in Figure~\ref{fig:cls_gs_diff_conf_mat}. The most confused pairs of
+transformations are \Trans{minimal change} with \Trans{different meaning} and
+\Trans{nonsense} with \Trans{different meaning}, both in around 40\%.
+Interestingly \Trans{paraphrase} gets recognised almost never, with
+\Trans{simple sentence}, \Trans{formal sentence}, \Trans{nonsense} and
+\Trans{minimal change} having accuracy bellow 20\%.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./figs/cls_gs_diff_conf_mat.png}
+  \caption{Summed confusion matrices of best classifiers for \Embed{sbert},
+  \Embed{sbert\_supervised} and \Embed{tfidf} embeddings. The confusion matrix
+  is row-normalized, whereas the displayed true and predicted distributions are
+  not.}\label{fig:cls_gs_diff_conf_mat}
+\end{figure}
+
+\subsubsection{No-context setting}
+
+Grid search results for no-context setting are displayed in
+Figure~\ref{fig:cls_gs_no_context_embed_comparison}. Comparing these results to
+those in contextualized setting, we see large drop of performance for
+\Embed{sbert} embedding --- almost by 50\%. This shows how much the classifiers
+relied on the information contained in the embedding of seed sentence. This
+drop is not as pronounced for \Embed{sbert\_supervised} embedding, since the
+model producing it is optimized for good scores in precisely this type of
+task.\footnote{For this reason, we avoid comparing \Embed{sbert\_supervised} to
+other embeddings from this point onwards.} On the other hand, the BOW
+embeddings performed almost as well, suggesting they were not really able to
+take advantage of the contextualized setting.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./figs/cls_gs_no_context_embed_comparison.png}
+
+  \caption{Grid search F1 macro averaged scores of sentence embeddings with no
+  context. The reported scores of \Embed{sbert\_supervised} are the mean scores
+  of all SBERT supervised
+  embeddings.}\label{fig:cls_gs_no_context_embed_comparison}
+
+\end{figure}
+
+In Figure~\ref{fig:cls_gs_no_context_labels} we compare performance of best
+classifiers for \Embed{sbert} and \Embed{tfidf} embedding. Whereas the most
+recognised transformations are the same as in the contextualized setting, the
+classifiers performance significantly drops in all cases except for the
+\Trans{ban} and the \Trans{possibility} transformations embedded with TF-IDF.
+This suggests that \Trans{ban} and \Trans{possibility} transformations can be
+easily identified from pure \emph{lexical} features. While SBERT fails to
+encode this information into its embedding, it performs even better when the
+embeddings of a sentence and its corresponding seed sentence are put into one
+context. This phenomena is pronounced mainly for \Trans{different meaning} and
+\Trans{past} transformations, where the inclusion of seed sentence's embedding
+on the input is responsible for over 80\% and 60\% of F1 score of the
+classifier, as can be seen in Figure~\ref{fig:cls_gs_labels_context_diff}.
+Overall SBERT's embeddings benefit from contextualization more than TF-IDF
+vectors.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figs/cls_gs_no_context_labels.png}
+
+  \caption{Comparison of F1 score per each transformation of best classifiers
+  for \Embed{sbert} and \Embed{tfidf} embedding in no-context
+  setting.}\label{fig:cls_gs_no_context_labels}
+
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figs/cls_gs_labels_context_diff.png}
+
+  \caption{Difference in F1 scores between no-context and contextualized
+  setting as a percentage of contextualized
+  score.}\label{fig:cls_gs_labels_context_diff}.
+
+\end{figure}
+
+\subsection{Evaluating Sentence Embeddings with Gaussian Mixture}
 
 This section presents an unsupervised approach for evaluating the separability
 of sentence embeddings. We measure label separability pairwisely using a
@@ -146,8 +425,124 @@ and an accuracy score of 0.924 for `simple sentence' and `future' classes.
 % distance to seed sentences
 
 
+
 \bibliography{bibliography}
 \bibliographystyle{acl_natbib}
+
+\clearpage
+\appendix
+\section{SBERT embeddings}\label{appendix:sbert_embeddings}
+
+For SBERT implementation we used the
+\texttt{sentence\_transformers}\footnote{\url{https://www.sbert.net/}} python
+library.
+
+To produce sentence embeddings with SBERT, we chose pretrained model referred
+to as `\textit{paraphrase-multilingual-MiniLM-L12-v2}'. It offers relatively
+good scores for its size.
+
+For the supervised SBERT sentence embeddings we list the hyperparameters used
+in Table~\ref{tab:sbert_supervised_hparams}. Note that due to the small size of
+training data, the model overfitted quickly. We therefore could afford to train
+only for 4 epochs.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{l c}
+    \toprule
+    Hyperparameter & Value\\
+    \midrule
+    epochs & 4 \\
+    batch size & 8 \\
+    warmup schedule & linear \\
+    warmup steps & 10000 \\
+    optimizer & AdamW \\
+    weight decay & 0.1 \\
+    learning rate & 2e-5 \\
+    \bottomrule
+  \end{tabular}
+
+  \caption{Hyperparameters used to train SBERT for supervised
+  embeddings}\label{tab:sbert_supervised_hparams}
+
+\end{table}
+
+\section{Probing method in detail}\label{appendix:probing_method}
+
+For probing tasks whose results we described in
+Section~\ref{sec:probing_results}, we used
+\texttt{scikit-learn}\footnote{\url{https://scikit-learn.org/stable/}} python
+package.
+
+The grid searched parameters and classifiers are presented in
+Table~\ref{tab:cls_gs_all_params}. We used cross-validated grid search, where
+the performence of a set of parameters is evaluated using cross validation. For
+all cross validations (both within and outside of grid search) we used
+\texttt{StratifiedGroupKFold}, where seed identifiers were used as groups. This
+caused the folds to be stratified as well as sharing as few common seed
+sentences as possible.
+
+\begin{table*}[htp]
+  \centering
+
+  \begin{tabular}{l l l}
+    \toprule
+    Classifier & Hyperparameter & Values searched \\
+    \midrule
+    \multirow{3}{13em}{\Cls{RandomForestClassifier}}
+    & \texttt{n\_estimators} & 50, 100, 200 \\
+    & \texttt{max\_depth} & 2, 5, 25, None \\
+    & \texttt{min\_samples\_split} & 2, 10, 20 \\
+    \midrule
+    \multirow{2}{13em}{\Cls{SVC}*}
+    & \texttt{kernel} & rbf, linear \\
+    & \texttt{gamma} & auto, scale\\
+    \midrule
+    \multirow{2}{13em}{\Cls{KNeighboursClassifier}*}
+    & \texttt{n\_neighbours} & 3, 5, 10\\
+    & \texttt{weights} & uniform, distance\\
+    \bottomrule
+  \end{tabular}
+
+  \caption{Classifiers and hyperparameters grid search for probe tasks. All are
+  named equally as in the \texttt{scikit-learn} python package. *Embeddings
+  were first scaled to have zero mean and unit
+  variance.}\label{tab:cls_gs_all_params}
+
+\end{table*}
+
+We report the best performing set of parameters for each classifier in
+Tables~\ref{tab:cls_gs_best_params_SVC},~\ref{tab:cls_gs_best_params_RandomForestClassifier}~and~\ref{tab:cls_gs_best_params_KNeighborsClassifier}
+
+\begin{table*}[htp]
+  \centering
+  \input{./cls_gs_best_params_SVC_tab.tex}
+
+  \caption{Best parameters for \Cls{SVC}
+  classifier.}\label{tab:cls_gs_best_params_SVC}
+
+\end{table*}
+
+\begin{table*}[htp]
+  \centering
+  \input{./cls_gs_best_params_RandomForestClassifier_tab.tex}
+
+  \caption{Best parameters for \Cls{RandomForestClassifier}
+  classifier.}\label{tab:cls_gs_best_params_RandomForestClassifier}
+
+\end{table*}
+
+\begin{table*}[htp]
+  \centering
+  \input{./cls_gs_best_params_KNeighborsClassifier_tab.tex}
+
+  \caption{Best parameters for \Cls{KNeighboursClassifier}
+  classifier.}\label{tab:cls_gs_best_params_KNeighborsClassifier}
+
+\end{table*}
+
+% chosen parameters
+
 
 
 \end{document}
