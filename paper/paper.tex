@@ -70,6 +70,9 @@
   Charles University, Prague\\
   \texttt{david.burian@matfyz.cz}
   }
+ \author{Vojtěch John\\
+ Charles University, Prague\\
+ }
   % Second Author \\
   % Affiliation / Address line 1 \\
   % Affiliation / Address line 2 \\
@@ -84,7 +87,6 @@ This is abstract
 \end{abstract}
 
 \section{Introduction}
-
 
 \section{Related work}
 
@@ -118,7 +120,16 @@ pretrained SBERT multilingual model. Additionally we also experimented with
 supervised method using the same SBERT model --- we call this embedding
 \Embed{sbert\_supervised}.
 
-% TODO: doc2vec training
+% TODO: doc2vec training - reread
+For training the Doc2vec model, we have used the implementation of Doc2vec algorithm
+available in the Python package gensim, using a window of size 4 and considering every
+word that occured at all (no pruning of rare words) and the vector size of 512.
+We have also tried training Doc2Vec models with different embedding sizes (2, 3, 10, 100, 256),
+partly so that we could see, ehat impact the size change has on the semantic label predictability, 
+partly (especially if we detected a positive correlation between the embedding size and the semantic label
+predictability) in order to try and get hint as to how prominent the specific semantic features are 
+(i.e. which is the smallest vector size at which given semantic label is predictable from the corresponding embeddings).
+
 
 To obtain \Embed{sbert\_supervised} we splitted the corpus into 5 folds. For
 each fold, the model trained on the remaining 4 folds and produced embeddings
