@@ -58,6 +58,7 @@
 
 \title{Semantic information inside sentence embeddings}
 
+Transformation \Trans{future} ....
 
 
 \author{Leixin Zhang \\ 
@@ -105,10 +106,13 @@ Doc2vec~\cite{le2014distributed}
 \subsection{Costra corpus}
 
 % Deep dive into the properties of the datsaet
-%   - transformation terminology
+%   - transformation terminology = transformation
+%   - contextualized and distance vector to relation vector
 %   - types and explanations of transformations
 %   - dataset statistics (count of seeds, sentences in total, transformation
 %   distributions)
+
+We define \emph{relation vector} as the ....
 
 \subsection{Embeddings}\label{sec:embeddings}
 
@@ -121,14 +125,16 @@ supervised method using the same SBERT model --- we call this embedding
 \Embed{sbert\_supervised}.
 
 % TODO: doc2vec training - reread
-For training the Doc2vec model, we have used the implementation of Doc2vec algorithm
-available in the Python package gensim, using a window of size 4 and considering every
-word that occured at all (no pruning of rare words) and the vector size of 512.
-We have also tried training Doc2Vec models with different embedding sizes (2, 3, 10, 100, 256),
-partly so that we could see, ehat impact the size change has on the semantic label predictability, 
-partly (especially if we detected a positive correlation between the embedding size and the semantic label
-predictability) in order to try and get hint as to how prominent the specific semantic features are 
-(i.e. which is the smallest vector size at which given semantic label is predictable from the corresponding embeddings).
+For training the Doc2vec model, we have used the implementation of Doc2vec
+algorithm available in the Python package gensim, using a window of size 4 and
+considering every word that occured at all (no pruning of rare words) and the
+vector size of 512. We have also tried training Doc2Vec models with different
+embedding sizes (2, 3, 10, 100, 256), partly so that we could see, ehat impact
+the size change has on the semantic label predictability, partly (especially if
+we detected a positive correlation between the embedding size and the semantic
+label predictability) in order to try and get hint as to how prominent the
+specific semantic features are (i.e. which is the smallest vector size at which
+given semantic label is predictable from the corresponding embeddings).
 
 
 To obtain \Embed{sbert\_supervised} we splitted the corpus into 5 folds. For
@@ -149,22 +155,35 @@ that are easily distinguishable for different transformations.
 % doing them. Give the reader a quick overview of the work we've done.
 
 
-\section{Methodology of Embedding Evaluation}
+
+In addition to visualizing the embeddings of derivation sentences, we employ
+several approaches to test whether our trained sentence embeddings can
+accurately characterize the derivation sentence types.
+
+\subsubsection{Visualization}
 
 
-In addition to visualizing the embeddings of derivation sentences, we employ several approaches to test whether our trained sentence embeddings can accurately characterize the derivation sentence types.
 
-
-
+\subsubsection{Cosine similarity}
 
 Firstly, we use cosine similarity ......
 
+\subsubsection{CHI index}
 
-the Calinski-Harabasz Index, an internal cluster validation test, to pairwise test the derivation clusters and evaluate how well a pair of derivation clusters are separated in space.
+the Calinski-Harabasz Index, an internal cluster validation test, to pairwise
+test the derivation clusters and evaluate how well a pair of derivation
+clusters are separated in space.
 
-Secondly, an unsupervised Gaussian Mixture model is employed to cluster each pair of derivation classes and compute the accuracy of unsupervised cluster labels and with the true labels.
+\subsubsection{GM}
 
-Lastly, we employ several supervised approaches to classify the embeddings and evaluate the extent to which the derivation classes can be captured by the trained classifiers. The accuracy scores are compared among classifiers including Multilayer Perceptron, Decision tree and Support Vector Machine.
+Secondly, an unsupervised Gaussian Mixture model is employed to cluster each
+pair of derivation classes and compute the accuracy of unsupervised cluster
+labels and with the true labels.
+
+% Lastly, we employ several supervised approaches to classify the embeddings and
+% evaluate the extent to which the derivation classes can be captured by the
+% trained classifiers. The accuracy scores are compared among classifiers
+% including Multilayer Perceptron, Decision tree and Support Vector Machine.
 
 
 \subsubsection{Probing tasks}
@@ -499,7 +518,9 @@ and an accuracy score of 0.924 for `simple sentence' and `future' classes.
 % generalized sentences (sentence meaning closer to seed sentences) has shorter
 % distance to seed sentences
 
+\section{Conclusion}
 
+% Summarize our results. Put them to context?
 
 \bibliography{bibliography}
 \bibliographystyle{acl_natbib}
