@@ -142,8 +142,30 @@ that are easily distinguishable for different transformations.
 
 \subsection{Tasks}
 
+
+
+
 % High overview of the tasks that were carried out as well as some motivation for
 % doing them. Give the reader a quick overview of the work we've done.
+
+
+\section{Methodology of Embedding Evaluation}
+
+
+In addition to visualizing the embeddings of derivation sentences, we employ several approaches to test whether our trained sentence embeddings can accurately characterize the derivation sentence types.
+
+
+
+
+Firstly, we use cosine similarity ......
+
+
+the Calinski-Harabasz Index, an internal cluster validation test, to pairwise test the derivation clusters and evaluate how well a pair of derivation clusters are separated in space.
+
+Secondly, an unsupervised Gaussian Mixture model is employed to cluster each pair of derivation classes and compute the accuracy of unsupervised cluster labels and with the true labels.
+
+Lastly, we employ several supervised approaches to classify the embeddings and evaluate the extent to which the derivation classes can be captured by the trained classifiers. The accuracy scores are compared among classifiers including Multilayer Perceptron, Decision tree and Support Vector Machine.
+
 
 \subsubsection{Probing tasks}
 
@@ -167,7 +189,49 @@ seed sentences. The results are presented in Section~\ref{sec:probing_results},
 the complete method is described in detail in
 Appendix~\ref{appendix:probing_method}.
 
+\section{Distance vectors of derivation class}
 
+This section utilizes the distance vectors between derived sentence embeddings and the seed sentence embedding to predict the derived embedding for another seed. We hypothesize that the distance vectors for each derivation class share a similarity and are able to predict the derivation embeddings given the seed embedding. For instance, for the derivation class `future', we assume that the following property holds: given two seed sentences  $Seed_i$ and $seed_j$, and one future sentence, $future_i$, we can predict $future_j$.
+ 
+\begin{equation}
+\label{eq:1}
+ future_j = future_i - seed_i + seed_j
+\end{equation}
+
+To test this hypothesis, we calculate the cosine similarity between the true sentence embeddings and predicted sentence embeddings using Equation \ref{eq:1}. We use 80\% of the data to extract and average the distance vectors ($sent_i$-$seed_i$) for each derivation class. We then add these distance vectors to the seed vector for the remaining 20\% of the data and compare the cosine similarity between the predicted and true embeddings.
+
+The results are presented in Table \ref{cosine}. Most of the derivation classes achieved a cosine similarity score above 0.8 compared with true embeddings, indicating that the predicted vectors closely approximate the true vectors in space, and the distance vectors of derived sentences and seed sentences are relatively stable for each derivation class.
+
+However, the 'generalization' class showed the lowest score, which could be attributed to the fact that each seed contains multiple degrees of transformation for the `generalization' class. Some derived sentences are more generalized, while others are less so, and averaging 80\% of them may not be sufficient to capture the features of the remaining 20\% of the data.
+
+
+
+
+\begin{table}[!htp]
+\centering
+\begin{tabular}{ c c }
+\toprule
+\vspace{0.1cm}
+\textbf{class}&\textbf{cosine-sim} \vspace{0.15cm}\\ 
+ \hline \\[-1.2ex]
+\vspace{0.1cm} possibility &    0.936635 \\
+\vspace{0.1cm} past & 0.930636 \\
+\vspace{0.1cm} future &     0.923555 \\
+\vspace{0.1cm} different meaning &    0.913798 \\
+\vspace{0.1cm} nonsense &   0.901452 \\
+\vspace{0.1cm} formal sentence &0.882741 \\
+\vspace{0.1cm} minimal change & 0.866246 \\
+\vspace{0.1cm} ban &  0.845272 \\
+\vspace{0.1cm} paraphrase & 0.81659  \\
+\vspace{0.1cm} nonstandard sentence & 0.812346 \\
+\vspace{0.1cm} simple sentence &0.807523 \\
+\vspace{0.1cm} opposite meaning &     0.748853 \\
+\vspace{0.1cm} generalization & 0.697715 \\
+\toprule
+\end{tabular}
+\caption{Cosine Similarity of predicted and true derivation sentence embeddings}
+\label{cosine}
+\end{table}
 \section{Results}
 
 %Enumeration of the tasks, for each task:
