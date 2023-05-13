@@ -58,9 +58,6 @@
 
 \title{Semantic information inside sentence embeddings}
 
-Transformation \Trans{future} ....
-
-
 \author{Leixin Zhang \\ 
     Computational Linguistics\\
     Seminar für Sprachwissenschaft,
@@ -124,7 +121,8 @@ pretrained SBERT multilingual model. Additionally we also experimented with
 supervised method using the same SBERT model --- we call this embedding
 \Embed{sbert\_supervised}.
 
-% TODO: doc2vec training - reread
+% David: I would maybe skip the part about training shorter embeddings. But
+% that can wait for the paper submit.
 For training the Doc2vec model, we have used the implementation of Doc2vec
 algorithm available in the Python package gensim, using a window of size 4 and
 considering every word that occured at all (no pruning of rare words) and the
@@ -195,18 +193,18 @@ the given embedding.
 
 The motivation for these tasks is that if the embedding contains semantic
 information (in our case the type of transformation used), it would be
-beneficial for the classifier to find and use this information. This would
-boost its scores and make it standout.
+beneficial for the classifier to find it and use it. This would boost its
+scores and make it standout.
 
-We test two settings: \emph{no-context} and \emph{contextualized}. In
-no-context setting the classifier receives only the sentence embedding itself
-and test which (if any) transformations can be reliably determined without the
-knowledge of the seed sentence. In the contextualized setting we pass both the
-sentence embedding and the embedding of the corresponding seed sentence. This
-enables the classifier to examine the relationships between the transformed and
-seed sentences. The results are presented in Section~\ref{sec:probing_results},
-the complete method is described in detail in
-Appendix~\ref{appendix:probing_method}.
+Since transformations define the relationship of two embeddings, we hypothesize
+that classifiers need both the sentence embedding and the seed embedding to
+produce reliable predictions. To test our hypothesis we run the probing tasks
+twice: first classifying transformation vectors\footnote{We also tried
+concatenating the sentence and the seed embeddings. This approach produced
+overall worse results, and therefore we omit them.}, second classifying only
+the sentence embeddings themselves. The results are presented in
+Section~\ref{sec:probing_results}, the complete method is described in detail
+in Appendix~\ref{appendix:probing_method}.
 
 \section{Distance vectors of derivation class}
 
@@ -312,12 +310,7 @@ In summary, our entire pipeline is as follows:
 More details about the pipeline can be found in
 Appendix~\ref{appendix:probing_method}.
 
-\subsubsection{Contextualized setting}
-
-We tried two methods of contextualization: \emph{concatenating} the two
-embeddings and \emph{subtracting} the seed embedding from the sentence
-embedding. Since the method using difference performed better, we omit the
-concatenation results.
+\subsubsection{Classifying transformation vectors}
 
 We report the grid search results in
 Figure~\ref{fig:cls_gs_diff_embed_comparison}. The best performing embeddings
@@ -330,7 +323,7 @@ the sentence transformation.
   \centering
   \includegraphics[width=0.5\textwidth]{figs/cls_gs_diff_embed_comparison.png}
 
-  \caption{Grid search F1 macro averaged scores of contextualized embeddings.
+  \caption{Grid search F1 macro averaged scores for transformation vectors.
   The reported scores of \Embed{sbert\_supervised} are the mean scores of all
   SBERT supervised embeddings.
   }\label{fig:cls_gs_diff_embed_comparison}
@@ -341,7 +334,8 @@ Moreover the BOW embeddings surpassed \Embed{doc2vec} embedding,
 proving that for prediction of transformation, lexical features are more
 valuable than any information extracted by our trained Doc2vec model.
 
-% TODO?: RandomForest performence on sparse embeddings
+% TODO?: Should I mention the suprising performance of RandomForest on sparse
+% embeddings?
 
 In Figure~\ref{fig:cls_gs_diff_labels} we show the performance of best
 classifiers per each label for the most performant dense and lexical
@@ -356,9 +350,9 @@ f1-score.
   \centering
   \includegraphics[width=0.5\textwidth]{./figs/cls_gs_diff_labels.png}
 
-  \caption{Comparison of F1 score per each transformation of best classifiers
-  for \Embed{sbert} and \Embed{tfidf} embedding in contextualized
-  setting.}\label{fig:cls_gs_diff_labels}
+  \caption{F1 score of transformation vectors for each transformation of the
+  best classifiers for given embedding.}\label{fig:cls_gs_diff_labels}
+
 \end{figure}
 
 In order to examine the most confused transformations we summed confusion
@@ -379,15 +373,15 @@ Interestingly \Trans{paraphrase} gets recognised almost never, with
   not.}\label{fig:cls_gs_diff_conf_mat}
 \end{figure}
 
-\subsubsection{No-context setting}
+\subsubsection{Classifying sentence embeddings}
 
-Grid search results for no-context setting are displayed in
+Again, we report plotted grid search results in
 Figure~\ref{fig:cls_gs_no_context_embed_comparison}. Comparing these results to
 those in contextualized setting, we see large drop of performance for
 \Embed{sbert} embedding --- almost by 50\%. This shows how much the classifiers
 relied on the information contained in the embedding of seed sentence. This
-drop is not as pronounced for \Embed{sbert\_supervised} embedding, since the
-model producing it is optimized for good scores in precisely this type of
+drop is not as pronounced for \Embed{sbert\_supervised} embedding, because the
+model producing them is optimized with precisely this type of
 task.\footnote{For this reason, we avoid comparing \Embed{sbert\_supervised} to
 other embeddings from this point onwards.} On the other hand, the BOW
 embeddings performed almost as well, suggesting they were not really able to
@@ -397,8 +391,8 @@ take advantage of the contextualized setting.
   \centering
   \includegraphics[width=0.5\textwidth]{./figs/cls_gs_no_context_embed_comparison.png}
 
-  \caption{Grid search F1 macro averaged scores of sentence embeddings with no
-  context. The reported scores of \Embed{sbert\_supervised} are the mean scores
+  \caption{Grid search F1 macro averaged scores of sentence embeddings. The
+  reported scores of \Embed{sbert\_supervised} are the mean scores
   of all SBERT supervised
   embeddings.}\label{fig:cls_gs_no_context_embed_comparison}
 
@@ -406,27 +400,27 @@ take advantage of the contextualized setting.
 
 In Figure~\ref{fig:cls_gs_no_context_labels} we compare performance of best
 classifiers for \Embed{sbert} and \Embed{tfidf} embedding. Whereas the most
-recognised transformations are the same as in the contextualized setting, the
-classifiers performance significantly drops in all cases except for the
-\Trans{ban} and the \Trans{possibility} transformations embedded with TF-IDF.
-This suggests that \Trans{ban} and \Trans{possibility} transformations can be
-easily identified from pure \emph{lexical} features. While SBERT fails to
-encode this information into its embedding, it performs even better when the
-embeddings of a sentence and its corresponding seed sentence are put into one
-context. This phenomena is pronounced mainly for \Trans{different meaning} and
-\Trans{past} transformations, where the inclusion of seed sentence's embedding
-on the input is responsible for over 80\% and 60\% of F1 score of the
-classifier, as can be seen in Figure~\ref{fig:cls_gs_labels_context_diff}.
-Overall SBERT's embeddings benefit from contextualization more than TF-IDF
-vectors.
+recognised transformations are the same as when classifying transformation
+vectors, the classifiers performance significantly drops in all cases except
+for the \Trans{ban} and the \Trans{possibility} transformations embedded with
+TF-IDF. This suggests that \Trans{ban} and \Trans{possibility} transformations
+can be easily identified from pure \emph{lexical} features and based on the
+sentence embedding only. While SBERT fails to encode this information into its
+embedding, it performs even better than TF-IDF when the embeddings of a
+sentence and its corresponding seed sentence are put into one context. As can
+be seen in Figure~\ref{fig:cls_gs_labels_context_diff}, this phenomena is
+pronounced mainly for \Trans{different meaning} and \Trans{past}
+transformations, where the inclusion of seed sentence's embedding on the input
+is responsible for over 80\% and 60\% of F1 score of the classifier. Overall
+SBERT's embeddings benefit from including the seed embedding to the input more
+than TF-IDF vectors.
 
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.5\textwidth]{figs/cls_gs_no_context_labels.png}
 
-  \caption{Comparison of F1 score per each transformation of best classifiers
-  for \Embed{sbert} and \Embed{tfidf} embedding in no-context
-  setting.}\label{fig:cls_gs_no_context_labels}
+  \caption{F1 scores of sentence embeddings for each transformation of the best
+  classifiers for given embedding.}\label{fig:cls_gs_no_context_labels}
 
 \end{figure}
 
@@ -434,9 +428,10 @@ vectors.
   \centering
   \includegraphics[width=0.5\textwidth]{figs/cls_gs_labels_context_diff.png}
 
-  \caption{Difference in F1 scores between no-context and contextualized
-  setting as a percentage of contextualized
-  score.}\label{fig:cls_gs_labels_context_diff}.
+  \caption{Drop in performance of best classifiers for given embedding going
+  from transformation vector to sentence embedding classification. The drop is
+  given as a percentage of score for transformation
+  vectors.}\label{fig:cls_gs_labels_context_diff}.
 
 \end{figure}
 
