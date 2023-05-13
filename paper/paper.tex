@@ -110,6 +110,8 @@ Doc2vec~\cite{le2014distributed}
 %   distributions)
 
 We define \emph{relation vector} as the ....
+To per
+Costra 
 
 \subsection{Embeddings}\label{sec:embeddings}
 
@@ -377,7 +379,7 @@ Interestingly \Trans{paraphrase} gets recognised almost never, with
 
 Again, we report plotted grid search results in
 Figure~\ref{fig:cls_gs_no_context_embed_comparison}. Comparing these results to
-those in contextualized setting, we see large drop of performance for
+results for probing transformation vectors, we see large drop of performance for
 \Embed{sbert} embedding --- almost by 50\%. This shows how much the classifiers
 relied on the information contained in the embedding of seed sentence. This
 drop is not as pronounced for \Embed{sbert\_supervised} embedding, because the
@@ -385,7 +387,7 @@ model producing them is optimized with precisely this type of
 task.\footnote{For this reason, we avoid comparing \Embed{sbert\_supervised} to
 other embeddings from this point onwards.} On the other hand, the BOW
 embeddings performed almost as well, suggesting they were not really able to
-take advantage of the contextualized setting.
+take advantage of the information inside seed embeddings.
 
 \begin{figure}[htp]
   \centering
