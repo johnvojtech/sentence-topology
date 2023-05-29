@@ -1,0 +1,91 @@
+nonsense	opposite meaning	0.0005140273743847711
+generalization	paraphrase	0.0005525589258533038
+formal sentence	simple sentence	0.0005956611500962764
+nonsense	possibility	0.00242053898110791
+ban	future	0.003036462734107321
+different meaning	generalization	0.005723505646314044
+opposite meaning	possibility	0.006281216574337001
+nonstandard sentence	paraphrase	0.007053725586259515
+different meaning	paraphrase	0.007866469003514256
+generalization	nonstandard sentence	0.014491466466370104
+different meaning	simple sentence	0.014498931097577057
+different meaning	nonstandard sentence	0.024813391211876853
+different meaning	formal sentence	0.028837914454931855
+past	simple sentence	0.029900432102760117
+formal sentence	past	0.03875872690745743
+generalization	simple sentence	0.05236310351419935
+paraphrase	simple sentence	0.054893016620077804
+nonsense	nonstandard sentence	0.05576749269878247
+ban	past	0.07311354126313455
+nonsense	paraphrase	0.07970787360779293
+nonstandard sentence	possibility	0.08287910531174911
+future	past	0.08439857039656577
+nonstandard sentence	opposite meaning	0.0879857994993481
+different meaning	past	0.09641755385819767
+nonstandard sentence	simple sentence	0.0993520822309614
+generalization	nonsense	0.09978676589801017
+different meaning	nonsense	0.10082628661166379
+paraphrase	possibility	0.10724467531686062
+opposite meaning	paraphrase	0.11287849951306582
+formal sentence	paraphrase	0.11826892756310894
+different meaning	opposite meaning	0.12191829333051699
+different meaning	possibility	0.12296343830585742
+formal sentence	generalization	0.12346609555447553
+generalization	possibility	0.13214322983469282
+ban	simple sentence	0.13980042891786715
+generalization	opposite meaning	0.15421740806834558
+future	simple sentence	0.1693393703437791
+ban	formal sentence	0.18243850516632526
+nonsense	simple sentence	0.20492518709378071
+ban	minimal change	0.20516339096083508
+possibility	simple sentence	0.23161331575136837
+ban	different meaning	0.23269949574931023
+formal sentence	nonstandard sentence	0.24014827534990182
+opposite meaning	simple sentence	0.25646061996765845
+paraphrase	past	0.2571518575037571
+formal sentence	future	0.26677843868821055
+generalization	past	0.27458382151585997
+different meaning	future	0.3011562318971696
+formal sentence	nonsense	0.3230079034070733
+formal sentence	possibility	0.3680720430496053
+future	minimal change	0.3910872174547401
+nonstandard sentence	past	0.4265641211125767
+ban	paraphrase	0.436284464565069
+ban	generalization	0.4598115167603152
+nonsense	past	0.4992873978616222
+formal sentence	opposite meaning	0.5348960871065733
+past	possibility	0.5426975757151844
+ban	nonstandard sentence	0.5904645601906034
+future	paraphrase	0.6725043410845332
+ban	nonsense	0.6855065461486031
+minimal change	past	0.6925044486270651
+ban	possibility	0.7042970555861799
+possibility	seed	0.7120273662128523
+minimal change	simple sentence	0.7363542858814903
+future	generalization	0.7461464256191912
+opposite meaning	past	0.7614997228853229
+opposite meaning	seed	0.8262375672364063
+ban	opposite meaning	0.8830174746007445
+nonsense	seed	0.8922697389116486
+different meaning	minimal change	0.9239848607393089
+future	nonsense	0.9419439845658415
+future	possibility	0.9874352847100694
+formal sentence	minimal change	1.0301979334105664
+future	nonstandard sentence	1.0312504889529008
+nonstandard sentence	seed	1.1124219027678282
+paraphrase	seed	1.2421554883791512
+generalization	seed	1.2993093832993898
+different meaning	seed	1.3519564067361358
+future	opposite meaning	1.495325172972185
+minimal change	paraphrase	1.5328588428180574
+generalization	minimal change	1.6571790728359908
+seed	simple sentence	1.7087811877795014
+formal sentence	seed	1.7422757848333625
+minimal change	possibility	1.8034193207065554
+minimal change	nonsense	1.8249624436743273
+minimal change	nonstandard sentence	1.9414255999494652
+past	seed	2.189204098110301
+minimal change	opposite meaning	2.41565172545809
+ban	seed	2.705118998359807
+future	seed	2.8871075589251207
+minimal change	seed	4.617161417501035
