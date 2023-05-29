@@ -6,7 +6,7 @@ Translation at MFF UK.
 ## Links
 
 - [Notes in google docs](https://docs.google.com/document/d/1ywUvIOaBFazc-MaJnkXkC-_ILy4b_VzXz9301Ms0_Xw/edit)
-
+- [Sentence Embeddings - Google Slides](https://docs.google.com/presentation/d/1p6pv10zsH2UrnM13d9zyfjDtHfRiQl2b3BchgshMOhk/edit)
 ## Installation
 
 Just run the following command (using your virtual environment) in the root of
