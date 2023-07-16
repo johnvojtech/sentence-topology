@@ -1,4 +1,10 @@
 #!python3
+
+"""
+How to use:
+python3 clusters.py file_with_embeddings file_for_results
+"""
+
 import sys
 import copy
 from collections import defaultdict
@@ -7,13 +13,17 @@ import sklearn.metrics as sm
 from sklearn.decomposition import PCA
 
 def load_embeddings(filename):
+    """ Load the embeddings from <filename> """
     with open(filename, "r") as r:
         embeddings = [s.strip("\n").split("\t") for s in r]
-        #print(set([x[2] for x in embeddings]))
         embeddings = [(e[:4], [float(n) for n in e[4:]]) for e in embeddings]
         return embeddings
 
 def subtract_seeds(embeddings):
+    """
+    Subtract the seed embeddings from the embeddings 
+    The <embeddings> is a list of tuples ([ID, seed, transformation, sentence], [the embeddings])
+    """
     ebs = defaultdict(list)
     seeds = {}
     for e in embeddings:
@@ -24,9 +34,12 @@ def subtract_seeds(embeddings):
     for k in ebs.keys():
         for e in ebs[k]:
             new_embeddings.append((e[0], [x - y for x, y in zip(e[1], seeds[e[0][1]][1])]))
-    return new_embeddings    
+    return new_embeddings
 
 def transformations(embeddings, trans):
+    """
+    Get the embeddings corresponding to given transformation
+    """
     features = []
     labels = []
     for embedding in embeddings:
@@ -36,87 +49,34 @@ def transformations(embeddings, trans):
     return np.array(features), labels
 
 def pca_fit(inputs, n):
+    """
+    not used - the PCA
+    """
     pca = PCA(n_components = n)
     pca.fit(np.transpose(inputs))
     pca_output = np.transpose(pca.components_)
     return pca_output
 
-def evaluate(trans, pca_n=0,filename=None, embeddings=None):
+def evaluate(trans, pca_n=0, filename=None, embeddings=None):
+    """
+    Rub the Calinski-Harabasz index evaluation
+    """
     if embeddings==None:
         embeddings = load_embeddings(filename)
     f, t = transformations(embeddings, trans)
     if pca_n > 0:
         f = pca_fit(f, pca_n)
-    #return sm.silhouette_score(f,t)
-    #return sm.davies_bouldin_score(f,t)
     return sm.calinski_harabasz_score(f,t)
 
 transforms = ['opposite meaning', 'simple sentence', 'formal sentence', 'ban', 'minimal change', 'possibility', 'generalization', 'nonstandard sentence', 'different meaning', 'seed', 'nonsense', 'past', 'future', 'paraphrase']
 transforms.sort()
 
+# embeddings without the seed embedding
 embeddings = load_embeddings(sys.argv[1])
+# embeddings with the seed embedding subtracted
 embeddings_diff = subtract_seeds(embeddings)
-#print(embeddings)
-#print(embeddings_diff)
 
-"""
-chs = sm.calinski_harabasz_score(features, labels)
-
-subdif = {}
-
-wia = []
-for i in range(len(transforms)):
-    filtered = [copy.deepcopy(x) for x in embeddings]
-    for x in filtered:
-        if x[0][2] != transforms[i]:
-            x[0][2] = "N"
-    labels = [x[0][2] for x in filtered]
-    features = np.array([x[1] for x in filtered])
-    chsn = sm.calinski_harabasz_score(features, labels)
-    subdif[transforms[i]] = chsn
-    wia.append([chsn, transforms[i]])
-wia.sort(key=lambda x:x[0])
-for w in wia:
-    print(w[1] + "\t" + str(w[0]) + "\t" + str(w[0] - chs))
-
-
-labels = [x[0][2] for x in embeddings_diff]
-features = np.array([x[1] for x in embeddings_diff])
-chs = sm.calinski_harabasz_score(features, labels)
-print("Subtract seed")
-wia = []
-for i in range(len(transforms)):
-    filtered = [copy.deepcopy(x) for x in embeddings_diff]
-    for x in filtered:
-        if x[0][2] != transforms[i]:
-            x[0][2] = "N"
-    labels = [x[0][2] for x in filtered]
-    features = np.array([x[1] for x in filtered])
-    chsn = sm.calinski_harabasz_score(features, labels)
-    wia.append([chsn, transforms[i]])
-    subdif[transforms[i]] -= chsn
-wia.sort(key=lambda x:x[0])
-for w in wia:
-    print(w[1] + "\t" + str(w[0]) + "\t" + str(chs - w[0]))
-
-print("Diff:")
-wls = [[k, subdif[k]] for k in subdif.keys()]
-wls.sort(key=lambda x:x[1])
-for item in wls:
-     print(str(item[0]) + "\t" + str(item[1]))
-print()
-
-
-for i in range(len(transforms)):
-    filtered = [x for x in embeddings if x[0][1] != transforms[i]]
-    labels = [x[0][2] for x in filtered]
-    features = np.array([x[1] for x in filtered])
-    wia.append([sm.calinski_harabasz_score(features, labels), transforms[i]])
-wia.sort(key=lambda x:x[1])
-for w in wia:
-    print(str(w[0]) + "\t" + w[1])
-"""
-
+#Evaluate the embeddings by CHI
 vs = []
 vs_diff = []
 for i in range(len(transforms)):
@@ -127,11 +87,15 @@ for i in range(len(transforms)):
         vs.append([val,t,t2])
         vs_diff.append([v2, t, t2])
 
+#Print out the results
+
 vs.sort(key=lambda x:x[0])
 vs_diff.sort(key=lambda x:x[0])
-with open(sys.argv[1].split("/")[-1] + ".free", "w") as w:
+with open(sys.argv[2] + "/" + sys.argv[1].split("/")[-1] + ".free", "w") as w:
     for item in vs:
         print(item[1] + "\t" + item[2] + "\t" + str(item[0]), file=w)
-with open(sys.argv[1].split("/")[-1] + ".seed_subtracted", "w") as w:
+
+with open(sys.argv[2] + "/" + sys.argv[1].split("/")[-1] + ".seed_subtracted", "w") as w:
     for item in vs_diff:
         print(item[1] + "\t" + item[2] + "\t" + str(item[0]), file=w)
+
