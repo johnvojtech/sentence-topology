@@ -1,0 +1,91 @@
+different meaning	seed	0.20661077861427285
+minimal change	seed	0.20767704005365928
+nonsense	seed	0.2627894183870354
+different meaning	nonsense	0.2840246336325049
+different meaning	minimal change	0.3039304084100332
+paraphrase	seed	0.3299878876558544
+different meaning	paraphrase	0.35586213477016065
+minimal change	nonsense	0.379767695858594
+seed	simple sentence	0.42405896313066066
+nonsense	paraphrase	0.538923243411015
+minimal change	paraphrase	0.5662552900648667
+formal sentence	seed	0.6426225301785239
+different meaning	formal sentence	0.7336730967674191
+different meaning	simple sentence	0.7673073290048401
+formal sentence	paraphrase	0.7896053864778231
+nonstandard sentence	seed	0.8169973050586327
+nonsense	simple sentence	0.8381899195891692
+generalization	seed	0.911387529591065
+minimal change	simple sentence	0.9468638340653528
+paraphrase	simple sentence	0.9640565745266576
+formal sentence	nonsense	0.9773959161863895
+formal sentence	minimal change	1.1885205745482657
+generalization	simple sentence	1.218748700509346
+minimal change	nonstandard sentence	1.4338779371305792
+generalization	nonsense	1.6859180322970428
+nonsense	nonstandard sentence	1.8181432177115182
+different meaning	nonstandard sentence	1.8524325351128104
+different meaning	generalization	1.8816872986331765
+formal sentence	simple sentence	1.8921223496756356
+generalization	minimal change	1.9442009723174318
+nonstandard sentence	simple sentence	2.1576524609810908
+past	seed	2.5318555231176005
+generalization	paraphrase	2.8762987630247827
+possibility	seed	2.8971359785835453
+nonstandard sentence	paraphrase	3.115794742238743
+opposite meaning	seed	3.197224614508582
+future	seed	3.379282960075249
+different meaning	past	4.031133730381137
+nonsense	possibility	4.410039471722881
+minimal change	possibility	4.465324764146862
+minimal change	past	4.5190420531226
+different meaning	possibility	4.571134312919226
+nonsense	past	4.5889263059935494
+possibility	simple sentence	4.887245464556179
+formal sentence	generalization	5.03008115592466
+past	simple sentence	5.234213049584795
+opposite meaning	simple sentence	5.311687763685201
+different meaning	opposite meaning	5.398762742460849
+generalization	nonstandard sentence	6.001757950441639
+paraphrase	possibility	6.036077351547286
+future	possibility	6.2018827429147905
+minimal change	opposite meaning	6.36732098619598
+future	minimal change	6.4773946890312954
+different meaning	future	6.692633765280184
+future	nonsense	6.75848517199885
+formal sentence	nonstandard sentence	6.781053103220579
+nonsense	opposite meaning	6.847597252716147
+paraphrase	past	6.891815907501359
+generalization	possibility	6.979206437722599
+formal sentence	possibility	7.004490834524938
+future	simple sentence	7.077520187047037
+nonstandard sentence	possibility	8.775556548409567
+formal sentence	past	8.933764368202725
+opposite meaning	paraphrase	9.097967140071823
+nonstandard sentence	past	10.917785184308872
+future	paraphrase	11.02403384957016
+formal sentence	opposite meaning	11.07680363973709
+generalization	past	12.012827305054861
+future	generalization	12.200099175443833
+past	possibility	12.387413996846464
+opposite meaning	possibility	12.906018444527836
+formal sentence	future	13.459574181697121
+generalization	opposite meaning	15.90340280446996
+ban	seed	15.935226551223007
+opposite meaning	past	16.09125540941734
+nonstandard sentence	opposite meaning	17.142135365721174
+future	nonstandard sentence	17.399397817206403
+ban	opposite meaning	18.89591621388822
+future	opposite meaning	20.806108262050806
+ban	simple sentence	21.23556319649373
+ban	different meaning	23.406479950303176
+future	past	24.38205903662237
+ban	minimal change	25.026254393373538
+ban	nonsense	25.149580569435916
+ban	possibility	26.846484479777406
+ban	paraphrase	31.017176460683825
+ban	formal sentence	32.62336492843969
+ban	generalization	33.74261039765699
+ban	future	35.24233051388583
+ban	past	38.45232768115588
+ban	nonstandard sentence	41.55586753311436

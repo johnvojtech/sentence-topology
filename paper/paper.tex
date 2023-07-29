@@ -58,8 +58,6 @@
 
 \title{Semantic information inside sentence embeddings}
 
-
-
 \author{Leixin Zhang \\ 
     Computational Linguistics\\
     Seminar für Sprachwissenschaft,
@@ -70,6 +68,9 @@
   Charles University, Prague\\
   \texttt{david.burian@matfyz.cz}
   }
+ \author{Vojtěch John\\
+ Charles University, Prague\\
+ }
   % Second Author \\
   % Affiliation / Address line 1 \\
   % Affiliation / Address line 2 \\
@@ -84,7 +85,6 @@ This is abstract
 \end{abstract}
 
 \section{Introduction}
-
 
 \section{Related work}
 
@@ -103,10 +103,15 @@ Doc2vec~\cite{le2014distributed}
 \subsection{Costra corpus}
 
 % Deep dive into the properties of the datsaet
-%   - transformation terminology
+%   - transformation terminology = transformation
+%   - contextualized and distance vector to relation vector
 %   - types and explanations of transformations
 %   - dataset statistics (count of seeds, sentences in total, transformation
 %   distributions)
+
+We define \emph{relation vector} as the ....
+To per
+Costra 
 
 \subsection{Embeddings}\label{sec:embeddings}
 
@@ -118,7 +123,19 @@ pretrained SBERT multilingual model. Additionally we also experimented with
 supervised method using the same SBERT model --- we call this embedding
 \Embed{sbert\_supervised}.
 
-% TODO: doc2vec training
+% David: I would maybe skip the part about training shorter embeddings. But
+% that can wait for the paper submit.
+For training the Doc2vec model, we have used the implementation of Doc2vec
+algorithm available in the Python package gensim, using a window of size 4 and
+considering every word that occured at all (no pruning of rare words) and the
+vector size of 512. We have also tried training Doc2Vec models with different
+embedding sizes (2, 3, 10, 100, 256), partly so that we could see, ehat impact
+the size change has on the semantic label predictability, partly (especially if
+we detected a positive correlation between the embedding size and the semantic
+label predictability) in order to try and get hint as to how prominent the
+specific semantic features are (i.e. which is the smallest vector size at which
+given semantic label is predictable from the corresponding embeddings).
+
 
 To obtain \Embed{sbert\_supervised} we splitted the corpus into 5 folds. For
 each fold, the model trained on the remaining 4 folds and produced embeddings
@@ -131,8 +148,43 @@ that are easily distinguishable for different transformations.
 
 \subsection{Tasks}
 
+
+
+
 % High overview of the tasks that were carried out as well as some motivation for
 % doing them. Give the reader a quick overview of the work we've done.
+
+
+
+In addition to visualizing the embeddings of derivation sentences, we employ
+several approaches to test whether our trained sentence embeddings can
+accurately characterize the derivation sentence types.
+
+\subsubsection{Visualization}
+
+
+
+\subsubsection{Cosine similarity}
+
+Firstly, we use cosine similarity ......
+
+\subsubsection{CHI index}
+
+the Calinski-Harabasz Index, an internal cluster validation test, to pairwise
+test the derivation clusters and evaluate how well a pair of derivation
+clusters are separated in space.
+
+\subsubsection{GM}
+
+Secondly, an unsupervised Gaussian Mixture model is employed to cluster each
+pair of derivation classes and compute the accuracy of unsupervised cluster
+labels and with the true labels.
+
+% Lastly, we employ several supervised approaches to classify the embeddings and
+% evaluate the extent to which the derivation classes can be captured by the
+% trained classifiers. The accuracy scores are compared among classifiers
+% including Multilayer Perceptron, Decision tree and Support Vector Machine.
+
 
 \subsubsection{Probing tasks}
 
@@ -143,20 +195,62 @@ the given embedding.
 
 The motivation for these tasks is that if the embedding contains semantic
 information (in our case the type of transformation used), it would be
-beneficial for the classifier to find and use this information. This would
-boost its scores and make it standout.
+beneficial for the classifier to find it and use it. This would boost its
+scores and make it standout.
 
-We test two settings: \emph{no-context} and \emph{contextualized}. In
-no-context setting the classifier receives only the sentence embedding itself
-and test which (if any) transformations can be reliably determined without the
-knowledge of the seed sentence. In the contextualized setting we pass both the
-sentence embedding and the embedding of the corresponding seed sentence. This
-enables the classifier to examine the relationships between the transformed and
-seed sentences. The results are presented in Section~\ref{sec:probing_results},
-the complete method is described in detail in
-Appendix~\ref{appendix:probing_method}.
+Since transformations define the relationship of two embeddings, we hypothesize
+that classifiers need both the sentence embedding and the seed embedding to
+produce reliable predictions. To test our hypothesis we run the probing tasks
+twice: first classifying transformation vectors\footnote{We also tried
+concatenating the sentence and the seed embeddings. This approach produced
+overall worse results, and therefore we omit them.}, second classifying only
+the sentence embeddings themselves. The results are presented in
+Section~\ref{sec:probing_results}, the complete method is described in detail
+in Appendix~\ref{appendix:probing_method}.
+
+\section{Distance vectors of derivation class}
+
+This section utilizes the distance vectors between derived sentence embeddings and the seed sentence embedding to predict the derived embedding for another seed. We hypothesize that the distance vectors for each derivation class share a similarity and are able to predict the derivation embeddings given the seed embedding. For instance, for the derivation class `future', we assume that the following property holds: given two seed sentences  $Seed_i$ and $seed_j$, and one future sentence, $future_i$, we can predict $future_j$.
+ 
+\begin{equation}
+\label{eq:1}
+ future_j = future_i - seed_i + seed_j
+\end{equation}
+
+To test this hypothesis, we calculate the cosine similarity between the true sentence embeddings and predicted sentence embeddings using Equation \ref{eq:1}. We use 80\% of the data to extract and average the distance vectors ($sent_i$-$seed_i$) for each derivation class. We then add these distance vectors to the seed vector for the remaining 20\% of the data and compare the cosine similarity between the predicted and true embeddings.
+
+The results are presented in Table \ref{cosine}. Most of the derivation classes achieved a cosine similarity score above 0.8 compared with true embeddings, indicating that the predicted vectors closely approximate the true vectors in space, and the distance vectors of derived sentences and seed sentences are relatively stable for each derivation class.
+
+However, the 'generalization' class showed the lowest score, which could be attributed to the fact that each seed contains multiple degrees of transformation for the `generalization' class. Some derived sentences are more generalized, while others are less so, and averaging 80\% of them may not be sufficient to capture the features of the remaining 20\% of the data.
 
 
+
+
+\begin{table}[!htp]
+\centering
+\begin{tabular}{ c c }
+\toprule
+\vspace{0.1cm}
+\textbf{class}&\textbf{cosine-sim} \vspace{0.15cm}\\ 
+ \hline \\[-1.2ex]
+\vspace{0.1cm} possibility &    0.936635 \\
+\vspace{0.1cm} past & 0.930636 \\
+\vspace{0.1cm} future &     0.923555 \\
+\vspace{0.1cm} different meaning &    0.913798 \\
+\vspace{0.1cm} nonsense &   0.901452 \\
+\vspace{0.1cm} formal sentence &0.882741 \\
+\vspace{0.1cm} minimal change & 0.866246 \\
+\vspace{0.1cm} ban &  0.845272 \\
+\vspace{0.1cm} paraphrase & 0.81659  \\
+\vspace{0.1cm} nonstandard sentence & 0.812346 \\
+\vspace{0.1cm} simple sentence &0.807523 \\
+\vspace{0.1cm} opposite meaning &     0.748853 \\
+\vspace{0.1cm} generalization & 0.697715 \\
+\toprule
+\end{tabular}
+\caption{Cosine Similarity of predicted and true derivation sentence embeddings}
+\label{cosine}
+\end{table}
 \section{Results}
 
 %Enumeration of the tasks, for each task:
@@ -218,12 +312,7 @@ In summary, our entire pipeline is as follows:
 More details about the pipeline can be found in
 Appendix~\ref{appendix:probing_method}.
 
-\subsubsection{Contextualized setting}
-
-We tried two methods of contextualization: \emph{concatenating} the two
-embeddings and \emph{subtracting} the seed embedding from the sentence
-embedding. Since the method using difference performed better, we omit the
-concatenation results.
+\subsubsection{Classifying transformation vectors}
 
 We report the grid search results in
 Figure~\ref{fig:cls_gs_diff_embed_comparison}. The best performing embeddings
@@ -236,7 +325,7 @@ the sentence transformation.
   \centering
   \includegraphics[width=0.5\textwidth]{figs/cls_gs_diff_embed_comparison.png}
 
-  \caption{Grid search F1 macro averaged scores of contextualized embeddings.
+  \caption{Grid search F1 macro averaged scores for transformation vectors.
   The reported scores of \Embed{sbert\_supervised} are the mean scores of all
   SBERT supervised embeddings.
   }\label{fig:cls_gs_diff_embed_comparison}
@@ -247,7 +336,8 @@ Moreover the BOW embeddings surpassed \Embed{doc2vec} embedding,
 proving that for prediction of transformation, lexical features are more
 valuable than any information extracted by our trained Doc2vec model.
 
-% TODO?: RandomForest performence on sparse embeddings
+% TODO?: Should I mention the suprising performance of RandomForest on sparse
+% embeddings?
 
 In Figure~\ref{fig:cls_gs_diff_labels} we show the performance of best
 classifiers per each label for the most performant dense and lexical
@@ -262,9 +352,9 @@ f1-score.
   \centering
   \includegraphics[width=0.5\textwidth]{./figs/cls_gs_diff_labels.png}
 
-  \caption{Comparison of F1 score per each transformation of best classifiers
-  for \Embed{sbert} and \Embed{tfidf} embedding in contextualized
-  setting.}\label{fig:cls_gs_diff_labels}
+  \caption{F1 score of transformation vectors for each transformation of the
+  best classifiers for given embedding.}\label{fig:cls_gs_diff_labels}
+
 \end{figure}
 
 In order to examine the most confused transformations we summed confusion
@@ -285,26 +375,26 @@ Interestingly \Trans{paraphrase} gets recognised almost never, with
   not.}\label{fig:cls_gs_diff_conf_mat}
 \end{figure}
 
-\subsubsection{No-context setting}
+\subsubsection{Classifying sentence embeddings}
 
-Grid search results for no-context setting are displayed in
+Again, we report plotted grid search results in
 Figure~\ref{fig:cls_gs_no_context_embed_comparison}. Comparing these results to
-those in contextualized setting, we see large drop of performance for
+results for probing transformation vectors, we see large drop of performance for
 \Embed{sbert} embedding --- almost by 50\%. This shows how much the classifiers
 relied on the information contained in the embedding of seed sentence. This
-drop is not as pronounced for \Embed{sbert\_supervised} embedding, since the
-model producing it is optimized for good scores in precisely this type of
+drop is not as pronounced for \Embed{sbert\_supervised} embedding, because the
+model producing them is optimized with precisely this type of
 task.\footnote{For this reason, we avoid comparing \Embed{sbert\_supervised} to
 other embeddings from this point onwards.} On the other hand, the BOW
 embeddings performed almost as well, suggesting they were not really able to
-take advantage of the contextualized setting.
+take advantage of the information inside seed embeddings.
 
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.5\textwidth]{./figs/cls_gs_no_context_embed_comparison.png}
 
-  \caption{Grid search F1 macro averaged scores of sentence embeddings with no
-  context. The reported scores of \Embed{sbert\_supervised} are the mean scores
+  \caption{Grid search F1 macro averaged scores of sentence embeddings. The
+  reported scores of \Embed{sbert\_supervised} are the mean scores
   of all SBERT supervised
   embeddings.}\label{fig:cls_gs_no_context_embed_comparison}
 
@@ -312,27 +402,27 @@ take advantage of the contextualized setting.
 
 In Figure~\ref{fig:cls_gs_no_context_labels} we compare performance of best
 classifiers for \Embed{sbert} and \Embed{tfidf} embedding. Whereas the most
-recognised transformations are the same as in the contextualized setting, the
-classifiers performance significantly drops in all cases except for the
-\Trans{ban} and the \Trans{possibility} transformations embedded with TF-IDF.
-This suggests that \Trans{ban} and \Trans{possibility} transformations can be
-easily identified from pure \emph{lexical} features. While SBERT fails to
-encode this information into its embedding, it performs even better when the
-embeddings of a sentence and its corresponding seed sentence are put into one
-context. This phenomena is pronounced mainly for \Trans{different meaning} and
-\Trans{past} transformations, where the inclusion of seed sentence's embedding
-on the input is responsible for over 80\% and 60\% of F1 score of the
-classifier, as can be seen in Figure~\ref{fig:cls_gs_labels_context_diff}.
-Overall SBERT's embeddings benefit from contextualization more than TF-IDF
-vectors.
+recognised transformations are the same as when classifying transformation
+vectors, the classifiers performance significantly drops in all cases except
+for the \Trans{ban} and the \Trans{possibility} transformations embedded with
+TF-IDF. This suggests that \Trans{ban} and \Trans{possibility} transformations
+can be easily identified from pure \emph{lexical} features and based on the
+sentence embedding only. While SBERT fails to encode this information into its
+embedding, it performs even better than TF-IDF when the embeddings of a
+sentence and its corresponding seed sentence are put into one context. As can
+be seen in Figure~\ref{fig:cls_gs_labels_context_diff}, this phenomena is
+pronounced mainly for \Trans{different meaning} and \Trans{past}
+transformations, where the inclusion of seed sentence's embedding on the input
+is responsible for over 80\% and 60\% of F1 score of the classifier. Overall
+SBERT's embeddings benefit from including the seed embedding to the input more
+than TF-IDF vectors.
 
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.5\textwidth]{figs/cls_gs_no_context_labels.png}
 
-  \caption{Comparison of F1 score per each transformation of best classifiers
-  for \Embed{sbert} and \Embed{tfidf} embedding in no-context
-  setting.}\label{fig:cls_gs_no_context_labels}
+  \caption{F1 scores of sentence embeddings for each transformation of the best
+  classifiers for given embedding.}\label{fig:cls_gs_no_context_labels}
 
 \end{figure}
 
@@ -340,9 +430,10 @@ vectors.
   \centering
   \includegraphics[width=0.5\textwidth]{figs/cls_gs_labels_context_diff.png}
 
-  \caption{Difference in F1 scores between no-context and contextualized
-  setting as a percentage of contextualized
-  score.}\label{fig:cls_gs_labels_context_diff}.
+  \caption{Drop in performance of best classifiers for given embedding going
+  from transformation vector to sentence embedding classification. The drop is
+  given as a percentage of score for transformation
+  vectors.}\label{fig:cls_gs_labels_context_diff}.
 
 \end{figure}
 
@@ -424,7 +515,9 @@ and an accuracy score of 0.924 for `simple sentence' and `future' classes.
 % generalized sentences (sentence meaning closer to seed sentences) has shorter
 % distance to seed sentences
 
+\section{Conclusion}
 
+% Summarize our results. Put them to context?
 
 \bibliography{bibliography}
 \bibliographystyle{acl_natbib}

@@ -1,0 +1,91 @@
+opposite meaning	seed	0.5653556350349146
+different meaning	nonsense	0.5837946394250616
+paraphrase	seed	0.6852435921251869
+minimal change	nonsense	0.7344292369679453
+different meaning	minimal change	0.7377458435874252
+nonsense	paraphrase	0.8195295699107519
+different meaning	paraphrase	0.8464120788314775
+minimal change	paraphrase	0.8586285962518408
+seed	simple sentence	0.873579286704523
+paraphrase	simple sentence	0.8808929401960942
+minimal change	seed	0.8918137791361399
+different meaning	seed	0.9575521881475438
+formal sentence	seed	0.9757475356294444
+nonsense	seed	0.9872040376512541
+formal sentence	nonsense	1.0342989774796874
+different meaning	formal sentence	1.037166957946455
+minimal change	opposite meaning	1.0431836257322114
+generalization	simple sentence	1.0701472441412414
+opposite meaning	simple sentence	1.0813318823616185
+nonstandard sentence	seed	1.125073518137301
+formal sentence	minimal change	1.2528628238656838
+opposite meaning	paraphrase	1.2762981009760423
+different meaning	opposite meaning	1.278403489441413
+nonsense	opposite meaning	1.3467708095200668
+different meaning	simple sentence	1.351800055069276
+formal sentence	paraphrase	1.3702059352532923
+generalization	seed	1.3887508401461253
+nonsense	simple sentence	1.3890234509063901
+minimal change	simple sentence	1.4195163216985853
+minimal change	nonstandard sentence	1.6486642064703787
+past	seed	1.7387471940605572
+different meaning	nonstandard sentence	1.786595705606121
+nonsense	nonstandard sentence	1.8893043646417822
+formal sentence	simple sentence	1.9456487042079769
+nonstandard sentence	paraphrase	2.0153381469079537
+nonstandard sentence	simple sentence	2.0715461482643835
+formal sentence	opposite meaning	2.2291200294796547
+different meaning	past	2.3475789801159936
+paraphrase	past	2.571380100731212
+nonsense	past	2.624532482957815
+minimal change	past	2.7551099895084903
+past	simple sentence	2.8287328410780335
+different meaning	generalization	3.0381463097791217
+generalization	minimal change	3.1167224340038513
+formal sentence	past	3.3260837359216198
+opposite meaning	past	3.386230805152454
+generalization	nonsense	3.4247356548768964
+generalization	paraphrase	3.5316297342810885
+generalization	opposite meaning	3.779777503024049
+nonstandard sentence	opposite meaning	4.119255482959203
+possibility	seed	4.178030739944179
+different meaning	possibility	4.397281846696439
+paraphrase	possibility	4.642754752563724
+possibility	simple sentence	4.6769262758733925
+nonsense	possibility	4.706097558115677
+minimal change	possibility	5.206682635563299
+formal sentence	nonstandard sentence	5.228768853659104
+nonstandard sentence	past	5.417398660834807
+future	seed	5.4867718327117965
+opposite meaning	possibility	5.842568119670139
+formal sentence	possibility	5.900022724476344
+nonstandard sentence	possibility	6.013296797051604
+formal sentence	generalization	6.2926835431317425
+past	possibility	6.886059994927181
+ban	paraphrase	7.103849719876259
+ban	simple sentence	7.13362412590771
+ban	different meaning	7.151168973506456
+ban	nonsense	7.293489361492648
+ban	seed	7.349123045952159
+future	nonsense	7.640784960070993
+generalization	past	7.696976332049446
+different meaning	future	7.702004030201908
+generalization	nonstandard sentence	7.722322760359533
+future	minimal change	7.805141158204685
+generalization	possibility	7.813712815470227
+future	simple sentence	7.85322499872673
+ban	minimal change	8.453569649952083
+ban	formal sentence	8.636918833332306
+ban	nonstandard sentence	8.745112947002315
+ban	possibility	8.946108841251098
+ban	opposite meaning	9.491156788133889
+future	paraphrase	9.601451789182098
+ban	past	10.804199830887372
+future	possibility	11.948865783156023
+ban	generalization	12.25930874309918
+formal sentence	future	12.57021596833427
+ban	future	13.006476791552737
+future	nonstandard sentence	13.227046607543597
+future	opposite meaning	13.30502403815279
+future	past	15.223529597275604
+future	generalization	15.844814739942052

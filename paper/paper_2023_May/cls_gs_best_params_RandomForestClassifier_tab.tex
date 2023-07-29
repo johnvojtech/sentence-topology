@@ -1,0 +1,25 @@
+\begin{tabular}{lccccc}
+\toprule
+&  & \texttt{max\_depth} & \texttt{min\_samples\_split} & \texttt{n\_estimators} \\
+Context & Embedding &  &  &  \\
+\midrule
+\multirow[c]{9}{*}{diff} & \Embed{bow} & 25 & 20 & 200 \\
+& \Embed{mixup\_by\_seed\_doc2vec} & None & 5 & 200 \\
+& \Embed{mixup\_by\_seed\_sbert} & 25 & 5 & 200 \\
+& \Embed{sbert\_supervised\_0} & None & 5 & 200 \\
+& \Embed{sbert\_supervised\_1} & None & 5 & 200 \\
+& \Embed{sbert\_supervised\_2} & 25 & 10 & 200 \\
+& \Embed{sbert\_supervised\_3} & None & 5 & 200 \\
+& \Embed{sbert\_supervised\_4} & None & 10 & 100 \\
+& \Embed{tfidf} & None & 20 & 200 \\
+\noalign{\smallskip}
+\cline{1-5}
+\noalign{\smallskip}
+\multirow[c]{6}{*}{no-context} & \Embed{bow} & 25 & 10 & 200 \\
+& \Embed{mixup\_by\_seed\_doc2vec} & None & 20 & 50 \\
+& \Embed{sbert\_supervised\_1} & 25 & 10 & 50 \\
+& \Embed{sbert\_supervised\_3} & 25 & 10 & 100 \\
+& \Embed{sbert\_supervised\_4} & 25 & 5 & 50 \\
+& \Embed{tfidf} & 25 & 10 & 200 \\
+\bottomrule
+\end{tabular}

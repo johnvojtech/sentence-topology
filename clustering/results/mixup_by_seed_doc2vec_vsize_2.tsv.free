@@ -1,0 +1,91 @@
+different meaning	nonstandard sentence	2.024852380226011e-06
+different meaning	generalization	0.0005511150405609848
+nonsense	opposite meaning	0.0011623694861784008
+generalization	nonstandard sentence	0.0014831809806392494
+nonsense	possibility	0.0025202160602787738
+ban	formal sentence	0.005994096575143397
+opposite meaning	possibility	0.008754498395612239
+future	past	0.012644927026194623
+different meaning	future	0.015690138011366993
+formal sentence	simple sentence	0.01585801760927999
+past	simple sentence	0.028514819947873825
+ban	simple sentence	0.028528133559245893
+future	nonstandard sentence	0.0339284217252954
+different meaning	paraphrase	0.034709126927549044
+future	generalization	0.042067553313978594
+different meaning	past	0.04333348269300598
+generalization	paraphrase	0.049884616881876176
+future	simple sentence	0.06963917824578897
+nonstandard sentence	paraphrase	0.07532139394883565
+nonstandard sentence	past	0.09110855314160925
+generalization	past	0.09873156821584106
+different meaning	simple sentence	0.10425948577488192
+ban	past	0.12739524980457095
+formal sentence	past	0.14350727312440478
+future	paraphrase	0.16474549047174988
+nonstandard sentence	simple sentence	0.17603947375875179
+generalization	simple sentence	0.1803173295229732
+ban	future	0.2054035063199739
+nonsense	paraphrase	0.2193180553113781
+ban	different meaning	0.22500257216008634
+paraphrase	past	0.25204944858880535
+different meaning	formal sentence	0.25227811195504724
+formal sentence	future	0.2642698576445633
+paraphrase	possibility	0.26780533113462085
+different meaning	nonsense	0.30121298489956266
+opposite meaning	paraphrase	0.3253545796978414
+paraphrase	simple sentence	0.33589149634627696
+different meaning	possibility	0.3462014070255342
+ban	generalization	0.3741675142949285
+ban	nonstandard sentence	0.38103544299178327
+different meaning	opposite meaning	0.39290823363157645
+generalization	nonsense	0.4332453955705217
+generalization	possibility	0.496500909873302
+nonsense	nonstandard sentence	0.5172727340490914
+ban	paraphrase	0.5687629986339703
+formal sentence	generalization	0.571230027445187
+possibility	seed	0.5758857040369558
+nonstandard sentence	possibility	0.5880720285698049
+formal sentence	nonstandard sentence	0.6115129245479238
+future	nonsense	0.6369175555586618
+nonsense	seed	0.653728774781331
+future	possibility	0.7075426736814091
+generalization	opposite meaning	0.7284258269910677
+ban	minimal change	0.7498699398014717
+nonsense	past	0.7514256540699921
+nonsense	simple sentence	0.8061102484072332
+past	possibility	0.8235114424793466
+formal sentence	paraphrase	0.8373156376673164
+opposite meaning	seed	0.8478900672637487
+possibility	simple sentence	0.870602054661907
+nonstandard sentence	opposite meaning	0.9209516888480841
+future	opposite meaning	1.0277873584481654
+ban	nonsense	1.064802307950321
+opposite meaning	simple sentence	1.090529852774946
+ban	possibility	1.1298002762367652
+minimal change	simple sentence	1.1635671604374487
+opposite meaning	past	1.1906308746506375
+formal sentence	minimal change	1.3238763554351252
+formal sentence	nonsense	1.401552092702758
+ban	opposite meaning	1.4565139880417508
+different meaning	seed	1.4647916675041328
+formal sentence	possibility	1.4823928163807891
+paraphrase	seed	1.5050303919053654
+generalization	seed	1.8474848983776098
+different meaning	minimal change	1.8880982690604227
+minimal change	past	2.022471689144909
+nonstandard sentence	seed	2.0397911398828197
+future	seed	2.151521297475444
+seed	simple sentence	2.265860198305461
+past	seed	2.2708312254248013
+future	minimal change	2.4083861410966567
+ban	seed	2.4878848479232882
+formal sentence	opposite meaning	2.4988045795168237
+formal sentence	seed	2.9073652056498696
+generalization	minimal change	3.0423929836842243
+minimal change	nonstandard sentence	3.2731003024447523
+minimal change	paraphrase	3.4446112645779947
+minimal change	nonsense	3.9496547115283875
+minimal change	possibility	4.017483267016114
+minimal change	seed	5.485621345009527
+minimal change	opposite meaning	5.625008071185626

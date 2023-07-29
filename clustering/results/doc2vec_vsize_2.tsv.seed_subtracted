@@ -1,0 +1,91 @@
+future	minimal change	9.414987241958344e-06
+nonstandard sentence	possibility	2.903660866989512e-05
+nonstandard sentence	seed	0.00023218014164332588
+possibility	seed	0.0003756830743231175
+different meaning	nonsense	0.0019710197484252997
+formal sentence	seed	0.0026153505492408136
+formal sentence	possibility	0.007950635718548536
+minimal change	paraphrase	0.01177210087975401
+ban	nonsense	0.013699197517311516
+formal sentence	nonstandard sentence	0.01601997380847787
+future	paraphrase	0.020489472715583594
+ban	different meaning	0.024259222066265042
+paraphrase	seed	0.03238841356928601
+formal sentence	paraphrase	0.042876758218415086
+ban	minimal change	0.04298040288348388
+different meaning	opposite meaning	0.05751103623252482
+paraphrase	possibility	0.05844724770623254
+ban	future	0.05887498479566345
+minimal change	seed	0.07280250370124206
+formal sentence	minimal change	0.07563908246145785
+future	seed	0.0783583251136003
+minimal change	possibility	0.09135291584735232
+nonsense	opposite meaning	0.09157357691296843
+minimal change	nonsense	0.11325858783819095
+nonstandard sentence	paraphrase	0.1144437552179925
+ban	paraphrase	0.11657472298687853
+future	possibility	0.1329850853441676
+formal sentence	future	0.1349116165751434
+different meaning	minimal change	0.1361244969459193
+minimal change	nonstandard sentence	0.14251420656964708
+future	nonsense	0.15812634623396835
+ban	opposite meaning	0.17969757679218157
+different meaning	future	0.18939504966293808
+ban	seed	0.226637482793258
+opposite meaning	simple sentence	0.2401839851806838
+nonsense	paraphrase	0.2463532138396007
+ban	possibility	0.2499244941760901
+ban	formal sentence	0.25763698571288274
+future	nonstandard sentence	0.2651579903161328
+different meaning	paraphrase	0.2793820588672272
+different meaning	simple sentence	0.34809792841273945
+nonsense	seed	0.36676328234581757
+ban	nonstandard sentence	0.37866733340350117
+different meaning	seed	0.40020337425193203
+nonsense	possibility	0.41078977217383145
+nonsense	simple sentence	0.42690280876311165
+different meaning	possibility	0.4394103098201593
+formal sentence	nonsense	0.45716189368984755
+minimal change	opposite meaning	0.48702823614527624
+different meaning	formal sentence	0.49400791814099504
+ban	simple sentence	0.5397470016332753
+past	seed	0.5560885894221144
+nonsense	nonstandard sentence	0.6352179288266242
+opposite meaning	seed	0.6706395820725392
+different meaning	nonstandard sentence	0.674120206826541
+generalization	simple sentence	0.7297649914818279
+past	possibility	0.7454910024611329
+future	opposite meaning	0.8289289293206534
+minimal change	simple sentence	0.9177895345016484
+opposite meaning	paraphrase	1.0467799168445386
+opposite meaning	possibility	1.1055236674675333
+seed	simple sentence	1.3165694680384914
+future	simple sentence	1.3284561940547717
+nonstandard sentence	past	1.4820649241508133
+paraphrase	simple sentence	1.4856077020588232
+possibility	simple sentence	1.5292047131898183
+minimal change	past	1.533486686124129
+formal sentence	past	1.5611875125672476
+formal sentence	opposite meaning	1.7404966440949206
+paraphrase	past	1.9032030839547134
+formal sentence	simple sentence	2.0159641788266915
+ban	past	2.070417540395361
+nonstandard sentence	opposite meaning	2.4097556941665137
+nonstandard sentence	simple sentence	2.485948026743091
+future	past	2.4889330263867055
+different meaning	generalization	2.5504222680070465
+different meaning	past	2.7068834913384623
+nonsense	past	2.7292203761793203
+generalization	nonsense	2.927725558059296
+ban	generalization	3.107607542692895
+generalization	opposite meaning	3.5752941175926782
+generalization	seed	3.636310601803655
+generalization	minimal change	4.384381423407135
+past	simple sentence	5.459555734523221
+generalization	possibility	5.897292382657725
+opposite meaning	past	6.248333351596185
+future	generalization	7.557163964192265
+generalization	paraphrase	7.805558646244751
+formal sentence	generalization	10.396583028798963
+generalization	nonstandard sentence	13.094105750591998
+generalization	past	18.502091539195813
