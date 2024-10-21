@@ -1,4 +1,4 @@
-# Topology of Czech sentence
+# Topology of Czech sentences
 
 This is a repo containg code to a paper we wrote for LREC COOLING 2024. The paper is called *"Unveiling semantic information in Sentence Embedding"* and is available in [ACL Anthology](https://aclanthology.org/2024.dmr-1.5/).
 
